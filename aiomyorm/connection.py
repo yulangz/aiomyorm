@@ -8,6 +8,7 @@ class _Engine(object):
     MYSQL = 1
     SQLITE = 3
     _created = False  # Indicates whether the connection to the database has been created.
+    
 
     @classmethod
     def set_engine(cls, this_engine: str):
@@ -23,34 +24,35 @@ class _Engine(object):
 
 
 try:
-    engine = _get_config().pop('engine').lower()
+    _engine = _get_config().pop('engine').lower()
 except KeyError:
-    engine = 'mysql'
+    _engine = 'sqlite'
 except ModuleNotFoundError:
-    engine = ''
-if engine == 'mysql':
+    _engine = ''
+if _engine == 'mysql':
     _Engine.set_engine('mysql')
-    from .engine.mysql import __create_connection, _close_db_conection, _select, _execute, _Connection, _Transaction
-elif engine == 'sqlite':
+    from .engine.mysql import __create_connection, _close_db_connection, _select, _execute, _Connection, _Transaction
+elif _engine == 'sqlite':
     _Engine.set_engine('sqlite')
-    from .engine.sqlite import __create_connection, _close_db_conection, _select, _execute, _Connection, _Transaction
+    from .engine.sqlite import __create_connection, _close_db_connection, _select, _execute, _Connection, _Transaction
 
 
 def _set_engine(new_engine: str):
     """Set a engine, import related modules, use in setconf.set_config."""
-    global __create_connection, _close_db_conection, _select, _execute, _Connection, _Transaction
+    global __create_connection, _close_db_connection, _select, _execute, _Connection, _Transaction
     engine = new_engine.lower()
     if engine == 'mysql':
         _Engine.set_engine('mysql')
-        from .engine.mysql import __create_connection, _close_db_conection, _select, _execute, _Connection, _Transaction
+        from .engine.mysql import __create_connection, _close_db_connection, _select, _execute, _Connection, _Transaction
     elif engine == 'sqlite':
         _Engine.set_engine('sqlite')
-        from .engine.sqlite import __create_connection, _close_db_conection, _select, _execute, _Connection, \
+        from .engine.sqlite import __create_connection, _close_db_connection, _select, _execute, _Connection, \
             _Transaction
 
 
 def _create_connection(echo: bool = False, debug: bool = False, **kwargs):
-    """Create a connection to databases.
+    """
+    Create a connection to databases.
 
     Args:
         See setconf's __doc__ .
@@ -58,28 +60,31 @@ def _create_connection(echo: bool = False, debug: bool = False, **kwargs):
     return __create_connection(echo=echo, debug=debug, **kwargs)
 
 
-async def close_db_conection():
-    """Close connection with database."""
-    return await _close_db_conection()
+async def close_db_connection():
+    """Close connection with database.You may sometime need it."""
+    return await _close_db_connection()
 
 
 def Connection():
-    """A async context manager to run a custom sql statement.
+    """
+    A async context manager to run a custom sql statement.
 
     Creates new connection.Returns a Connection instance.
     You can also use this connection in ORM by specifying the conn parameter.
-    If you have not set autocommit=True, you should commit manual by use conn.commit().
+    If you have not set autocommit=True, you should commit manual by use ``conn.commit()``.
     """
     return _Connection()
 
 
 def Transaction():
-    """Get a connection to do atomic transaction.
+    """
+    Get a connection to do atomic transaction.
 
-     This is a subclass of Connection and they have the same usage,
-     and on exit, this connection will automatically commit or roll back on error.
-     You can also use this connection in ORM by specifying the conn parameter.
-     Example:
+    This is a subclass of Connection and they have the same usage,
+    and on exit, this connection will automatically commit or roll back on error.
+    You can also use this connection in ORM by specifying the conn parameter.
+    Example::
+
         async whit connection.Transaction() as conn:
             await Table(tl1='abc',tl2=123).save(conn=conn)
     """
@@ -89,15 +94,17 @@ def Transaction():
 def select(sql: str,
            args: Optional[Union[list, tuple]] = (),
            conn: Optional[Connection] = None) -> dict:
-    """execute a select query, and return a dict of result.
+    """
+    Execute a select query, and return a dict of result.You can use this method
+    when you encounter a query that ORM cannot complete
 
-        Args:
-            sql(str): a sql statement, use ? as placeholder.
-            args(list or tuple): argument in placeholder.
-            conn: use this parameter to specify a custom connection.
+    Args:
+        sql(str): a sql statement, use ? as placeholder.
+        args(list or tuple): argument in placeholder.
+        conn: use this parameter to specify a custom connection.
 
-        Return:
-             (dict) a dict of result.
+    Return:
+         (dict) a dict of result.
     """
     return _select(sql, args, conn)
 
@@ -105,14 +112,16 @@ def select(sql: str,
 def execute(sql: str,
             args: Optional[Union[list, tuple]] = (),
             conn: Optional[Connection] = None) -> int:
-    """execute a insert,update or delete query, and return the number of affected rows.
+    """
+    Execute a insert,update or delete query, and return the number of affected rows.You can use this method
+    when you encounter a query that ORM cannot complete.
 
-        Args:
-            sql(str): a sql statement, use ? as placeholder.
-            args(list or tuple): argument in placeholder.
-            conn: use this parameter to specify a custom connection.
+    Args:
+        sql(str): a sql statement, use ? as placeholder.
+        args(list or tuple): argument in placeholder.
+        conn: use this parameter to specify a custom connection.
 
-        Return:
-              (int) affected rows.
+    Return:
+          (int) affected rows.
     """
     return _execute(sql, args, conn)

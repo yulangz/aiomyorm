@@ -27,7 +27,7 @@ async def __create_connection(echo=False, debug=False, **kwargs):
     await _execute('CREATE DATABASE IF NOT EXISTS `%s`;\nUSE %s;' % (db, db))
 
 
-async def _close_db_conection():
+async def _close_db_connection():
     """Close connection with database."""
     await _Connection._close_pool()  # the _Connection and Aton_Transaction use the same pool
     _Connection._set_pool(None)

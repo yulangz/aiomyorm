@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to aiomyorm’s documentation! &mdash; aiomyorm 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #ff00ff" >
+          
+
+          
+            <a href="#" class="icon icon-home"> aiomyorm
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">aiomyorm</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to aiomyorm’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-aiomyorm-s-documentation">
+<h1>Welcome to aiomyorm’s documentation!<a class="headerlink" href="#welcome-to-aiomyorm-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>aiomyorm is a simple and easy-to-use ORM framework, which has a similar interface to Django and fully supports asyncio.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Perfect support for asyncio and uvloop.</p></li>
+<li><p>Simple and easy to use API, similar to Django.</p></li>
+<li><p>Support mysql and SQLite.</p></li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">aiomyorm</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aiomyorm</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">IntField</span><span class="p">,</span> <span class="n">StringField</span><span class="p">,</span> <span class="n">SmallIntField</span><span class="p">,</span> <span class="n">auto_increment</span>
+<span class="kn">from</span> <span class="nn">aiomyorm</span> <span class="kn">import</span> <span class="n">set_config</span><span class="p">,</span> <span class="n">close_db_connection</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="n">set_config</span><span class="p">(</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;sqlite&#39;</span><span class="p">,</span>
+           <span class="n">db</span><span class="o">=</span><span class="s1">&#39;test.db&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">__table__</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+    <span class="n">pk</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">auto_increment</span><span class="p">())</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;the age of student.&#39;</span><span class="p">)</span>
+    <span class="n">birth_place</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;china&#39;</span><span class="p">)</span>
+    <span class="n">grade</span> <span class="o">=</span> <span class="n">SmallIntField</span><span class="p">()</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">go</span><span class="p">():</span>
+    <span class="n">insert_rows</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place1&#39;</span><span class="p">),</span>
+                           <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5001</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place2&#39;</span><span class="p">),</span>
+                           <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5002</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place3&#39;</span><span class="p">))</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;insert rows: &#39;</span><span class="p">,</span> <span class="n">insert_rows</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">Test</span><span class="o">.</span><span class="n">create_table</span><span class="p">())</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go</span><span class="p">())</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>the results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">to</span> <span class="n">create</span> <span class="n">table</span> <span class="n">test</span><span class="o">.</span>
+<span class="n">insert</span> <span class="n">rows</span><span class="p">:</span>  <span class="mi">3</span>
+<span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+<span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+<span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>more use see <a class="reference internal" href="quickstart.html"><span class="doc">Quick Start</span></a></p>
+</div>
+<div class="section" id="source-code">
+<h2>Source code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>The project is in Github <a class="reference external" href="https://github.com/yulansp/aiomyorm">aiomyorm</a>.</p>
+<p>Feel free to file an issue.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python &gt;= 3.5.3</p></li>
+<li><p><a class="reference external" href="https://github.com/aio-libs/aiomysql">aiomysql</a> (for MySQL)</p></li>
+<li><p><a class="reference external" href="https://github.com/jreese/aiosqlite">aiosqlite</a> (for sqlite)</p></li>
+</ul>
+</div>
+<div class="section" id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<p>I have a simple test for you.</p>
+<p>It’s better for you to test in a <code class="docutils literal notranslate"><span class="pre">venv</span></code>.</p>
+<p>You just need:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">make</span> <span class="n">test</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>MIT</p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#configuration-database">Configuration database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-model">Create Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-table">Create Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#insert-data">Insert data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#query-from-database">Query from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#general-query">General query</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#query-all">query all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#filter-results">filter results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#change-database">change database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#find-first-and-pk-find"><code class="docutils literal notranslate"><span class="pre">find_first()</span></code> and <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#more-useful-api">more useful API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#aggregate-query">Aggregate query</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#delete-from-database">Delete from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#delete"><code class="docutils literal notranslate"><span class="pre">delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#update-data">Update data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="field.html#basic-field">Basic Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-aiomyorm.field">Integer Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-0">String Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-1">Text Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-2">Decimal Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-3">DateTime Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#more-field">More Field</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, yulansp
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

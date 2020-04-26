@@ -41,7 +41,7 @@ async def __create_connection(echo=False, debug=False, **kwargs):
     await _ConnManager.init_conn(db, **kwargs)
 
 
-async def _close_db_conection():
+async def _close_db_connection():
     """Close connection with database."""
     await _ConnManager._conn.close()
     _ConnManager._conn = None

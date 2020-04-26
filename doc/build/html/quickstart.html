@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quick Start &mdash; aiomyorm 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="set_config" href="set_config.html" />
+    <link rel="prev" title="Welcome to aiomyorm’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #ff00ff" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> aiomyorm
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-database">Configuration database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-model">Create Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-table">Create Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#insert-data">Insert data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-from-database">Query from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-query">General query</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#query-all">query all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#filter-results">filter results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-database">change database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#find-first-and-pk-find"><code class="docutils literal notranslate"><span class="pre">find_first()</span></code> and <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#more-useful-api">more useful API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#aggregate-query">Aggregate query</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#delete-from-database">Delete from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete"><code class="docutils literal notranslate"><span class="pre">delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#update-data">Update data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">aiomyorm</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Quick Start</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuration-database">
+<h2>Configuration database<a class="headerlink" href="#configuration-database" title="Permalink to this headline">¶</a></h2>
+<p>To use aiomyorm, first configure the database information.</p>
+<p>The best way to configure it is to add a config.py file to your project directory, as shown in the following figure.</p>
+<img alt="_images/project.png" src="_images/project.png" />
+<p>Then create a dict named aiomyorm in config.py, which contains your database related configuration, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aiomyorm</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;maxsize&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;123456&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;db&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;engine&#39;</span><span class="p">:</span> <span class="s1">&#39;mysql&#39;</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<p>more configuration option see <a class="reference internal" href="set_config.html"><span class="doc">set_config</span></a></p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">set_config_model()</span></code> method to specify a specific Python file as the config file.</p>
+<p>If you do not want to add an additional configuration file,
+you can also use the <code class="docutils literal notranslate"><span class="pre">set_config()</span></code> method to configure manually:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_config</span><span class="p">(</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;sqlite&#39;</span><span class="p">,</span>
+           <span class="n">db</span><span class="o">=</span><span class="s1">&#39;test.db&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-model">
+<h2>Create Model<a class="headerlink" href="#create-model" title="Permalink to this headline">¶</a></h2>
+<p>Like most ORM frameworks, you can create model classes to map your data tables.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="n">__table__</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>
+<span class="n">pk</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">auto_increment</span><span class="p">())</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">age</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+<span class="n">birth_place</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;china&#39;</span><span class="p">)</span>
+<span class="n">grade</span> <span class="o">=</span> <span class="n">SmallIntField</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>more field see <a class="reference internal" href="field.html"><span class="doc">field</span></a></p>
+<p>You can also specify the <code class="docutils literal notranslate"><span class="pre">__auto__</span></code> property to be <code class="docutils literal notranslate"><span class="pre">True</span></code>. This model will automatically query
+all fields from the corresponding tables in the database and map them to itself.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">All_Field</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="n">__table__</span> <span class="o">=</span> <span class="s1">&#39;all_field&#39;</span>
+<span class="n">__auto__</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">__auto__</span></code> not support sqlite.</p>
+</div>
+</div>
+<div class="section" id="create-table">
+<h2>Create Table<a class="headerlink" href="#create-table" title="Permalink to this headline">¶</a></h2>
+<p>aiomyorm allows you to create database tables directly using the framework without
+relying on other database management tools.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">Test</span><span class="o">.</span><span class="n">create_table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="insert-data">
+<h2>Insert data<a class="headerlink" href="#insert-data" title="Permalink to this headline">¶</a></h2>
+<p>Inserting data with aiomyorm is simple. You only need to create a instance and call <code class="docutils literal notranslate"><span class="pre">save()</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_save</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_save</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>All unassigned fields will be set to the <code class="docutils literal notranslate"><span class="pre">default</span></code> value of this <code class="docutils literal notranslate"><span class="pre">Field</span></code>.</p>
+<p>If you want to insert more than one piece of data at a time, you need to call the <code class="docutils literal notranslate"><span class="pre">insert()</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_insert</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place1&#39;</span><span class="p">),</span>
+                           <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5001</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place2&#39;</span><span class="p">),</span>
+                           <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">5002</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="o">=</span><span class="s1">&#39;place3&#39;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_insert</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">insert()</span></code> is a classmethod while <code class="docutils literal notranslate"><span class="pre">save()</span></code> is not.</p>
+</div>
+</div>
+<div class="section" id="query-from-database">
+<h2>Query from database<a class="headerlink" href="#query-from-database" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general-query">
+<h3>General query<a class="headerlink" href="#general-query" title="Permalink to this headline">¶</a></h3>
+<p>aiomyorm provides three ways to execute queries: <code class="docutils literal notranslate"><span class="pre">find()</span></code>,``pk_find()`` and <code class="docutils literal notranslate"><span class="pre">find_first()</span></code>.
+The most common query method is <code class="docutils literal notranslate"><span class="pre">find()</span></code> and <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">find()</span></code>, <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code> and <code class="docutils literal notranslate"><span class="pre">find_first()</span></code> are all classmethod.</p>
+</div>
+<div class="section" id="query-all">
+<h4>query all<a class="headerlink" href="#query-all" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">find()</span></code> will execute the query based on your restrictions and return all query objects in a list,
+by default, he will query the entire table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_find</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_find</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">9999</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">china</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filter-results">
+<h4>filter results<a class="headerlink" href="#filter-results" title="Permalink to this headline">¶</a></h4>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">query()</span></code> method to restrict the fields of the query and filter from the table using <code class="docutils literal notranslate"><span class="pre">filter()</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_filter</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_filter</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">filter()</span></code> will use equal as the filter condition. If you want to filter more flexibly, use <code class="docutils literal notranslate"><span class="pre">flex_filter()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_flex_filter</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">flex_filter</span><span class="p">(</span><span class="n">Test</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">19</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_flex_filter</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">9999</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">20</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">flex_filter()</span></code> can also filter data objects according to &lt;, = or start_with,
+see <a class="reference internal" href="model.html#aiomyorm.model.Model.flex_filter" title="aiomyorm.model.Model.flex_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">flex_filter()</span></code></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you have used methods such as <code class="docutils literal notranslate"><span class="pre">filter()</span></code> to restrict query results,
+do not use <code class="docutils literal notranslate"><span class="pre">await</span></code> to surrender control until you execute the query
+method(<code class="docutils literal notranslate"><span class="pre">find()</span></code> <code class="docutils literal notranslate"><span class="pre">find_first()</span></code> and so on):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is an example of a mistake</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">go_filter</span><span class="p">():</span>
+        <span class="n">Test</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">other_task</span><span class="p">()</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="change-database">
+<h4>change database<a class="headerlink" href="#change-database" title="Permalink to this headline">¶</a></h4>
+<p>Sometimes your data is stored in different databases. You can use
+<a class="reference internal" href="model.html#aiomyorm.model.Model.change_db_one_time" title="aiomyorm.model.Model.change_db_one_time"><code class="xref py py-meth docutils literal notranslate"><span class="pre">change_db_one_time()</span></code></a> or
+<a class="reference internal" href="model.html#aiomyorm.model.Model.change_db" title="aiomyorm.model.Model.change_db"><code class="xref py py-meth docutils literal notranslate"><span class="pre">change_db()</span></code></a> to switch databases:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_change_db</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">change_db_one_time</span><span class="p">(</span><span class="s1">&#39;test2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The difference between <code class="docutils literal notranslate"><span class="pre">change_db()</span></code> and <code class="docutils literal notranslate"><span class="pre">change_db_one_time()</span></code> is that <code class="docutils literal notranslate"><span class="pre">change_db()</span></code> will
+permanently change the database of this model, And <code class="docutils literal notranslate"><span class="pre">change_db_one_time()</span></code> will only change in this query.</p>
+</div>
+<div class="section" id="find-first-and-pk-find">
+<h4><code class="docutils literal notranslate"><span class="pre">find_first()</span></code> and <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code><a class="headerlink" href="#find-first-and-pk-find" title="Permalink to this headline">¶</a></h4>
+<p>Both two methods will directly return a data object,
+in which <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code> is based on the value of the primary key, and <code class="docutils literal notranslate"><span class="pre">find_first()</span></code>
+is based on the filter criteria, and the first matching object is returned.</p>
+<p>pk_find:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_pk_find</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">pk_find</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Test</span><span class="p">))</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_pk_find</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+<span class="kc">True</span>
+</pre></div>
+</div>
+<p>find_first:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_find_first</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">flex_filter</span><span class="p">(</span><span class="n">Test</span><span class="o">.</span><span class="n">pk</span><span class="o">&gt;</span><span class="mi">5000</span><span class="p">)</span><span class="o">.</span><span class="n">find_first</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Test</span><span class="p">))</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_find_first</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+<span class="kc">True</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>The different between ``find_first()`` and ``limit()``</strong>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Test.find_first()</span></code> will return the first object in table while
+<code class="docutils literal notranslate"><span class="pre">Test.limit(1).find()</span></code> will return a list, although there is only one object in the list.</p>
+</div>
+</div>
+<div class="section" id="more-useful-api">
+<h4>more useful API<a class="headerlink" href="#more-useful-api" title="Permalink to this headline">¶</a></h4>
+<p>aiomyorm also provides many useful APIs, see <a class="reference internal" href="model.html"><span class="doc">model</span></a></p>
+</div>
+</div>
+<div class="section" id="aggregate-query">
+<h3>Aggregate query<a class="headerlink" href="#aggregate-query" title="Permalink to this headline">¶</a></h3>
+<p>aiomyorm allows you to easily perform aggregate queries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_aggregate</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">maxage</span><span class="o">=</span><span class="n">Max</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">))</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_aggregate</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;COUNT__age&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;maxage&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>or execute group aggregation query:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_group</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Count</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">maxage</span><span class="o">=</span><span class="n">Max</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_group</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="mi">19</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;COUNT__age&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;maxage&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">},</span>
+ <span class="mi">20</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;COUNT__age&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;maxage&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+ <span class="mi">21</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;COUNT__age&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;maxage&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>aiomyorm provides the following five aggregate functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span><span class="p">(),</span> <span class="n">Min</span><span class="p">(),</span> <span class="n">Count</span><span class="p">(),</span> <span class="n">Avg</span><span class="p">(),</span> <span class="n">Sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>more information see <a class="reference internal" href="model.html#aiomyorm.model.Model.aggregate" title="aiomyorm.model.Model.aggregate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">aggregate()</span></code></a></p>
+</div>
+</div>
+<div class="section" id="delete-from-database">
+<h2>Delete from database<a class="headerlink" href="#delete-from-database" title="Permalink to this headline">¶</a></h2>
+<p>aiomyorm provides two methods to delete data from the database: <code class="docutils literal notranslate"><span class="pre">delete()</span></code> and <code class="docutils literal notranslate"><span class="pre">remove()</span></code></p>
+<div class="section" id="remove">
+<h3><code class="docutils literal notranslate"><span class="pre">remove()</span></code><a class="headerlink" href="#remove" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">remove()</span></code> is used to delete the object from the table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_remove</span><span class="p">():</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">pk_find</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">t</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_remove</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete">
+<h3><code class="docutils literal notranslate"><span class="pre">delete()</span></code><a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">delete()</span></code> is used for batch deletion. It can accept filter and other filter criteria
+and return the number of deleted rows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_delete</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">flex_filter</span><span class="p">(</span><span class="n">Test</span><span class="o">.</span><span class="n">age</span><span class="o">&gt;=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_delete</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">delete()</span></code> is a classmethod while <code class="docutils literal notranslate"><span class="pre">remove()</span></code> is not.</p>
+</div>
+</div>
+</div>
+<div class="section" id="update-data">
+<h2>Update data<a class="headerlink" href="#update-data" title="Permalink to this headline">¶</a></h2>
+<p>Similar to delete, aiomyorm provides two methods to perform update:<code class="docutils literal notranslate"><span class="pre">save()</span></code> and <code class="docutils literal notranslate"><span class="pre">update()</span></code></p>
+<div class="section" id="save">
+<h3><code class="docutils literal notranslate"><span class="pre">save()</span></code><a class="headerlink" href="#save" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">save()</span></code> can be used not only to create data, but also to modify data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_save_update</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">Test</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">3333</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;old_data&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">pk_find</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;old data: &#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;new data&#39;</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">await</span> <span class="n">r</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">r_new</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">pk_find</span><span class="p">(</span><span class="mi">3333</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;new data: &#39;</span><span class="p">,</span> <span class="n">r_new</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_save_update</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">old</span> <span class="n">data</span><span class="p">:</span>  <span class="n">pk</span><span class="p">:</span><span class="mi">3333</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">old_data</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">china</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+<span class="n">new</span> <span class="n">data</span><span class="p">:</span>  <span class="n">pk</span><span class="p">:</span><span class="mi">3333</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">new</span> <span class="n">data</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">china</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update">
+<h3><code class="docutils literal notranslate"><span class="pre">update()</span></code><a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">update()</span></code> is used to perform batch changes, which is similar to <code class="docutils literal notranslate"><span class="pre">delete()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_update</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;old values:&#39;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update affect </span><span class="si">%d</span><span class="s1"> rows, new value is:&#39;</span> <span class="o">%</span> <span class="n">rows</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_update</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">old</span> <span class="n">values</span><span class="p">:</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">3333</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">new</span> <span class="n">data</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">china</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place4</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">10001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place5</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="n">update</span> <span class="n">affect</span> <span class="mi">2</span> <span class="n">rows</span><span class="p">,</span> <span class="n">new</span> <span class="n">value</span> <span class="ow">is</span><span class="p">:</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">3333</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">new</span> <span class="n">data</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">china</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place4</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">10001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place5</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">update()</span></code> is a classmethod while <code class="docutils literal notranslate"><span class="pre">save()</span></code> is not.</p>
+</div>
+<p>Thanks for reading!</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="set_config.html" class="btn btn-neutral float-right" title="set_config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to aiomyorm’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, yulansp
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

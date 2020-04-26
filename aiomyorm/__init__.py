@@ -1,7 +1,7 @@
 # Copyright (c) 2020 yulansp
 # Licensed under the MIT license
 
-from .connection import Connection, Transaction, close_db_conection, execute, select
+from .connection import Connection, Transaction, close_db_connection, execute, select
 from .field import (
     Field,
     SmallIntField,
@@ -69,7 +69,7 @@ __all__ = [
     # connection
     'Connection',
     'Transaction',
-    'close_db_conection',
+    'close_db_connection',
     'execute',
     'select',
     # setup

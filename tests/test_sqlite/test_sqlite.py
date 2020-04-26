@@ -30,7 +30,7 @@ from aiomyorm.field import (
     table_default
 )
 from aiomyorm.connection import Connection, Transaction
-from aiomyorm.connection import select, execute, close_db_conection
+from aiomyorm.connection import select, execute, close_db_connection
 from aiomyorm.log import logger
 from aiomyorm.set_config import set_config
 
@@ -436,7 +436,7 @@ def main():
     dir_name = os.path.dirname(__file__)
     suite = unittest.defaultTestLoader.discover(dir_name, pattern='test*.py')
     unittest.TextTestRunner(verbosity=2).run(suite)
-    asyncio.get_event_loop().run_until_complete(close_db_conection())
+    asyncio.get_event_loop().run_until_complete(close_db_connection())
 
 
 if __name__ == "__main__":

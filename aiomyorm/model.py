@@ -1,4 +1,4 @@
-# :TODO support multi-table query
+# :TODO support multi-table query, let __auto__ support sqlite
 import logging
 import asyncio
 import datetime
@@ -13,9 +13,10 @@ from .log import logger
 
 
 class classonlymethod(classmethod):
-    """Convert a function to be a class only method.
+    """
+    Convert a function to be a class only method.
 
-        This has the same usage as classmethod, except that it can only be used in class.
+    This has the same usage as classmethod, except that it can only be used in class.
     """
 
     def __get__(self, instance, owner):
@@ -114,11 +115,14 @@ class ModelMetaClass(type):
                                 params['default'] = datetime.datetime.strptime(table_field_default, '%Y-%m-%d')
                             else:
                                 params['default'] = datetime.datetime.strptime(table_field_default, '%Y-%m-%d %H:%M:%S')
+                    else:
+                        params['column_type'] = field_type
+                        params['default'] = None
 
                     table_extra = field['EXTRA']
                     if table_extra:  # to use table default, such as auto_increment
                         params['default'] = table_default(table_extra)
-                    attrs[field_name] = _field_map[field_type](**params)  # Field class in _field_map
+                    attrs[field_name] = getattr(_field_map, field_type, Field)(**params)  # Field class in _field_map
                     logger.debug('auto set field %s : %s', field_name, attrs[field_name])
 
         mapping = dict()
@@ -167,16 +171,16 @@ class ModelMetaClass(type):
 
 
 class Model(dict, metaclass=ModelMetaClass):
-    """The basic model class.
+    """
+    The basic model class.
 
-        Attributes:
-            __table__ : The table name of this model.If you do not set this attribute,
-                class name will be used by default.
-            __auto__ : If true, fields will automatically retrieved from the table, default False.
-        Warnings: __auto__ dose not support sqlite.
-        TODO: support sqlite
-            the field you define : All the fields you define. In class it will be field while in instance it is
-                the value of this field.
+    Attributes:
+        __table__ : The table name of this model.If you do not set this attribute,
+            class name will be used by default.
+        __auto__ : If true, fields will automatically retrieved from the table, default False.
+            **Warnings: __auto__ dose not support sqlite.**
+        the field you define : All the fields you define. In class it will be field while in instance it is
+            the value of this field.
     """
 
     def __init__(self, _new_created: bool = True, _pk_value=None, **kwargs):
@@ -248,9 +252,10 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def change_db(cls, db: str):
-        """Change the database this model belongs to.
+        """
+        Change the database this model belongs to.
 
-            Warnings: not support sqlite
+        **Warnings: not support sqlite**
         """
         cls._db = cls._current_db = db
         return cls
@@ -262,11 +267,13 @@ class Model(dict, metaclass=ModelMetaClass):
             You can use this method temporarily change the database this model
             belongs in the next query or modification.
 
-            e.g.
-            r = await Model.change_db_one_time(newdb).find()
+            e.g.::
+
+                r = await Model.change_db_one_time(newdb).find()
+
             This query will be performed in newdb.
 
-            Warnings: not support sqlite
+            **Warnings: not support sqlite**
         """
         cls._current_db = db
         return cls
@@ -335,15 +342,17 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def query(cls, *args: Optional[Union[str, Field]]) -> None:
-        """Choice the field you want to query.
+        """
+        Choice the field you want to query.
 
-        All the query method such as find() will query all the fields by default,
+        All the query method such as ``find()`` will query all the fields by default,
         so if you want to query all fields, just do not use this method.
 
         Args:
-            The field you wang to query.You can use Model.Field or the name of field.
+            args: The field you wang to query.You can use Model.Field or the name of field.
 
-        e.g.:
+        e.g.::
+
             r = await User.query(User.id).findall()
             r = await User.query('id').findall()
         Raises:
@@ -359,10 +368,11 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def filter(cls, **kwargs) -> None:
-        """Filter your query,correspond to where key=value in sql.
+        """
+        Filter your query,correspond to where key=value in sql.
 
         Args:
-            The field you wang to filter and it's value.
+            Kwargs: The field you wang to filter and it's value.
 
         Raises:
             ValueError: An error occurred when argument is not a Field.
@@ -378,25 +388,27 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def flex_filter(cls, *conditions: Tuple):
-        """Filter your query flexibly, such as '>' '<' and so on.
+        """
+        Filter your query flexibly, such as '>' '<' and so on.
 
-                Args:
-                    The field you wang to filter and it's value.
-                You can use the following methods:
-                    flex_filter(Table.Field>100)               --in sql-->  where Table.Field>100
-                    flex_filter(Table.Field>=100)              --in sql-->  where Table.Field>=100
-                    flex_filter(Table.Field==100)              --in sql-->  where Table.Field=100
-                    flex_filter(Table.Field<=100)              --in sql-->  where Table.Field<=100
-                    flex_filter(Table.Field<100)               --in sql-->  where Table.Field<100
-                    flex_filter(Table.Field.like('%abc%'))     --in sql-->  where Table.Field LIKE '%abc%'
-                    flex_filter(Table.Field.start_with(abc))   --in sql-->  where Table.Field LIKE 'abc%'
-                    flex_filter(Table.Field.end_with(abc))     --in sql-->  where Table.Field LIKE '%abc'
-                    flex_filter(Table.Field.has('abc'))        --in sql-->  where Table.Field LIKE '%abc%'
+        Args:
+            conditions: The field you wang to filter and it's value.
+        You can use the following methods::
+
+            flex_filter(Table.Field>100)               --in sql-->  where Table.Field>100
+            flex_filter(Table.Field>=100)              --in sql-->  where Table.Field>=100
+            flex_filter(Table.Field==100)              --in sql-->  where Table.Field=100
+            flex_filter(Table.Field<=100)              --in sql-->  where Table.Field<=100
+            flex_filter(Table.Field<100)               --in sql-->  where Table.Field<100
+            flex_filter(Table.Field.like('%abc%'))     --in sql-->  where Table.Field LIKE '%abc%'
+            flex_filter(Table.Field.start_with(abc))   --in sql-->  where Table.Field LIKE 'abc%'
+            flex_filter(Table.Field.end_with(abc))     --in sql-->  where Table.Field LIKE '%abc'
+            flex_filter(Table.Field.has('abc'))        --in sql-->  where Table.Field LIKE '%abc%'
 
 
-                Raises:
-                    ValueError: An error occurred when you use it in the wrong way.
-                """
+        Raises:
+            ValueError: An error occurred when you use it in the wrong way.
+        """
         for condition in conditions:
             condition_expression, condition_args = condition
             cls._where.append(condition_expression)
@@ -410,10 +422,11 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def exclude(cls, **kwargs) -> None:
-        """Exclude filter your query.
+        """
+        Exclude filter your query.
 
         Args:
-            The field you wang to exclude and it's value.
+            kwargs: the field you wang to exclude and it's value.
 
         Raises:
             ValueError: An error occurred when argument is not a Field.
@@ -429,15 +442,16 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def flex_exclude(cls, *conditions: Tuple):
-        """Exclude your query flexibly, such as '>' '<' and so on.
+        """
+        Exclude your query flexibly, such as '>' '<' and so on.
 
-                Args:
-                    The field you wang to exclude and it's value.
-                You can use the following methods:
-                    same as flex_filtter()
+        Args:
+            The field you wang to exclude and it's value.
+        You can use the following methods:
+            same as ``flex_filtter()``
 
-                Raises:
-                    ValueError: An error occurred when you use it in the wrong way.
+        Raises:
+            ValueError: An error occurred when you use it in the wrong way.
                 """
         for condition in conditions:
             condition_expression, condition_args = condition
@@ -465,19 +479,20 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     def order_by(cls, *args: Optional[str]):
-        """Sort query results.
+        """
+        Sort query results.
 
         By default, it will be sorted from small to large. You can sort it from large to small by adding '-'.
 
         Args:
-            (str) The sorting basis you specified.
+            args: (str) The sorting basis you specified.
 
-        Example:
+        Example::
+
             User.query('id').order_by('id').find()
-            #will sort by id from small to large
+            # will sort by id from small to large
             User.query('id').order_by('-id').find()
-            #will sort by id from large to small
-
+            # will sort by id from large to small
         """
         fields = cls.get_fields()
         for order_condition in args:
@@ -510,7 +525,8 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def find(cls):
-        """Do select.This method will return a list of YourModel objects.
+        """
+        Do select.This method will return a list of YourModel objects.
 
         Return:
             (list) A list of YourModel objects.If no record can be found, will return an empty list.
@@ -544,7 +560,8 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def find_first(cls):
-        """Do select.This method will directly return one YourModel object instead of a list.
+        """
+        Do select.This method will directly return one YourModel object instead of a list.
 
         Returns:
             (Model) One YourModel object.If no record can be found, will return None.
@@ -579,10 +596,11 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def pk_find(cls, pk_value):
-        """Get one object by primary key.
+        """
+        Get one object by primary key.
 
         You should specify the primary key in this method.
-        All the restrictions you have made before, except "query()", will not take effect
+        All the restrictions you have made before, except "``query()``", will not take effect.
         This method will directly return one YourModel object.
 
         Args:
@@ -607,33 +625,39 @@ class Model(dict, metaclass=ModelMetaClass):
     @classonlymethod
     async def aggregate(cls, *args, group_by: Optional[Union[str, Field]] = None, **kwargs) \
             -> Union[List[Dict], Dict, NoReturn]:
-        """Aggregate query.
+        """
+        Aggregate query.
 
-            Args:
-                args: aggregate function, it's alias will be taken as (function)__(field name) e.g. MAX__age
-                group_by(str): Same as sql, and only allow one field.
-                kwargs: key is the alias of this aggregate field,and value is the aggregate function.
+        Args:
+            args: aggregate function, it's alias will be taken as ``(function)__(field name)``, e.g. ``MAX__age``.
+             you can use the follow aggregate function::
+                Max(), Min(), Count(), Avg(), Sum()
+            group_by(str): Same as sql, and only allow one field.
+            kwargs: key is the alias of this aggregate field,and value is the aggregate function.
 
-            Returns:
-                If the group_by parameter is not specified, will return a dict which key is it's alias and value is
-                it's result.
-                If the group_by parameter is specified, will return a dict which key is the result of the group_by field
-                in each group, and value is a dict as same as the first situation.
+        Returns:
+            If the group_by parameter is not specified, will return a dict which key is it's alias and value is
+            it's result.
+            If the group_by parameter is specified, will return a dict which key is the result of the group_by field
+            in each group, and value is a dict as same as the first situation.
 
-            Sample:
+        Sample:
+            you can run this code::
+
                 from model import Max,Count,Min,Avg
-                async def test():
-                    rs = await Test.filter(grade=2).aggregate(Max('age'),minage=Min('age'),avgage=Avg('age'),
-                                                              groupnum=Count(),group_by='birth_place')
-                    print(rs)
+                async def run():
+                    rs = await Test.filter(grade=3).aggregate(Max('age'), minage=Min('age'), avgage=Avg('age'),
+                                                              groupnum=Count(), group_by='birth_place')
+                    import pprint
+                    pprint.pprint(rs)
 
-                asyncio.get_event_loop().run_until_complete(test())
+                asyncio.get_event_loop().run_until_complete(run())
 
-                result:
-                {'江苏': {'MAX__age': 19, 'minage': 19, 'avgage': Decimal('19.0000'), 'groupnum': 1},
-                 '浙江': {'MAX__age': 18, 'minage': 18, 'avgage': Decimal('18.0000'), 'groupnum': 1},
-                  '湖北': {'MAX__age': 20, 'minage': 20, 'avgage': Decimal('20.0000'), 'groupnum': 1},
-                   '南京': {'MAX__age': 18, 'minage': 18, 'avgage': Decimal('18.0000'), 'groupnum': 1}}
+            you will get the result::
+
+                {'someplace': {'MAX__age': 20, 'avgage': 20.0, 'groupnum': 1, 'minage': 20},
+                 'someplace1': {'MAX__age': 23, 'avgage': 20.5, 'groupnum': 2, 'minage': 18},
+                 'someplace3': {'MAX__age': 17, 'avgage': 17.0, 'groupnum': 1, 'minage': 17}}
 
         """
         if group_by:
@@ -687,18 +711,19 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def insert(cls, *insert_objects) -> int:
-        """Insert objects to database.
+        """
+        Insert objects to database.
 
-            This method can insert multiple objects and access the database only once.
+        This method can insert multiple objects and access the database only once.
 
-            Args:
-                insert_objects (Model): One or more object of this Model.
+        Args:
+            insert_objects (Model): One or more object of this Model.
 
-            Raise:
-                ValueError: An error occurred when argument is not the object of this model.
+        Raise:
+            ValueError: An error occurred when argument is not the object of this model.
 
-            Return:
-                (int) Affected rows.
+        Return:
+            (int) Affected rows.
         """
         multiple_args = []
         insert_field = []
@@ -731,9 +756,11 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def update(cls, **kwargs) -> int:
-        """Update objects to database.
+        """
+        Update objects to database.
 
-        You can use filter() and other method to filter the objects that want to update, just as you did in find().
+        You can use ``filter()`` and other method to filter the objects that want to update,\
+        just as you did in ``find()``.
 
         Return:
             (int) Total number of objects updated.
@@ -763,7 +790,8 @@ class Model(dict, metaclass=ModelMetaClass):
     async def delete(cls) -> int:
         """Delete objects from database.
 
-        You can use filter() and other method to filter the objects that want to delete, just as you did in find().
+        You can use ``filter()`` and other method to filter the objects that want to delete,\
+        just as you did in ``find()``.
 
         Return:
             (int) Total number of objects deleted.
@@ -787,7 +815,7 @@ class Model(dict, metaclass=ModelMetaClass):
 
     @classonlymethod
     async def create_table(cls):
-        """Create table in """
+        """Create this table in current database."""
         # Check whether the table exists
         if _Engine.is_mysql():
             r = await select("""
@@ -849,15 +877,16 @@ class Model(dict, metaclass=ModelMetaClass):
             print('not create.')
 
     async def save(self) -> NoReturn:
-        """Save this object to database.
+        """
+        Save this object to database.
 
-            Raise:
-                RuntimeError: An error occurred when failed to save this object.
-                AttributeError: An error occurred when primary key has been changed, which
-                is not allowed in this method, use update().
+        Raise:
+            RuntimeError: An error occurred when failed to save this object.
+            AttributeError: An error occurred when primary key has been changed, which
+            is not allowed in this method, use ``update()``.
 
-            Return:
-                None
+        Return:
+            None
         """
         if self._new_created:  # a new object to insert
             insert_field = []
@@ -892,17 +921,18 @@ class Model(dict, metaclass=ModelMetaClass):
             raise RuntimeError('Failed to save object %s' % self)
 
     async def remove(self) -> NoReturn:
-        """Remove this object from database.
+        """
+        Remove this object from database.
 
-            Raise:
-                RuntimeError: An error occurred when can not find a primary key of this object.
-                since every object queried from the database will query primary key explicitly
-                or implicitly, this error will only appear when the newly created object calls
-                the remove() method, which itself is the wrong use. To delete an object without
-                querying in advance, use delete() method.
+        Raise:
+            RuntimeError: An error occurred when can not find a primary key of this object.
+            since every object queried from the database will query primary key explicitly
+            or implicitly, this error will only appear when the newly created object calls
+            the ``remove()`` method, which itself is the wrong use. To delete an object without
+            querying in advance, use ``delete()`` method.
 
-            Return:
-                None
+        Return:
+            None
         """
         if self._new_created:
             logger.warning('do not use remove() method in newly created object, consider delete()')
