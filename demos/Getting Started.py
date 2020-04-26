@@ -17,12 +17,13 @@ class Test(Model):
 
 async def go():
     insert_rows = await Test.insert(Test(pk=5000, age=18, birth_place='place1'),
-                           Test(pk=5001, age=21, birth_place='place2'),
-                           Test(pk=5002, age=19, birth_place='place3'))
+                                    Test(pk=5001, age=21, birth_place='place2'),
+                                    Test(pk=5002, age=19, birth_place='place3'))
     all = await Test.find()
     print('insert rows: ', insert_rows)
     for r in all:
         print(r)
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

@@ -20,9 +20,10 @@ async def go_save():
 
 async def go_insert():
     r = await Test.insert(Test(pk=5000, age=19, birth_place='place1'),
-                           Test(pk=5001, age=21, birth_place='place2'),
-                           Test(pk=5002, age=19, birth_place='place3'))
+                          Test(pk=5001, age=21, birth_place='place2'),
+                          Test(pk=5002, age=19, birth_place='place3'))
     assert r == 3
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(go_save())

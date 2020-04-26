@@ -51,9 +51,10 @@ async def go_pk_find():
 
 
 async def go_find_first():
-    r = await Test.flex_filter(Test.pk>5000).find_first()
+    r = await Test.flex_filter(Test.pk > 5000).find_first()
     print(r)
     print(isinstance(r, Test))
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(go_find_first())

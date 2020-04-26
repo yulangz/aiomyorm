@@ -203,8 +203,8 @@ when you encounter a query that ORM cannot complete.</p>
 
 <dl class="py function">
 <dt id="aiomyorm.connection.select">
-<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#aiomyorm.connection.select" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a select query, and return a dict of result.You can use this method
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#aiomyorm.connection.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a select query, and return a list of result.You can use this method
 when you encounter a query that ORM cannot complete</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -215,7 +215,7 @@ when you encounter a query that ORM cannot complete</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(dict) a dict of result.</p>
+<dd class="field-even"><p>(list) a list of result.</p>
 </dd>
 </dl>
 </dd></dl>

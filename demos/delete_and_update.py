@@ -20,10 +20,10 @@ async def go_remove():
 
 
 async def go_delete():
-    r = await Test.flex_filter(Test.age>=20).delete()
+    r = await Test.flex_filter(Test.age >= 20).delete()
     print(r)
-    
-    
+
+
 async def go_save_update():
     await Test(pk=3333, id='old_data', age=20).save()
     r = await Test.pk_find(3333)
@@ -44,6 +44,7 @@ async def go_update():
     r = await Test.find()
     print('update affect %d rows, new value is:' % rows)
     pprint.pprint(r)
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(go_update())

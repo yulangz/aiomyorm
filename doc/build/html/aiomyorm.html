@@ -201,8 +201,8 @@ when you encounter a query that ORM cannot complete.</p>
 
 <dl class="py function">
 <dt id="aiomyorm.connection.select">
-<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="connection.html#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#aiomyorm.connection.select" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a select query, and return a dict of result.You can use this method
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="connection.html#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#aiomyorm.connection.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a select query, and return a list of result.You can use this method
 when you encounter a query that ORM cannot complete</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,7 +213,7 @@ when you encounter a query that ORM cannot complete</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(dict) a dict of result.</p>
+<dd class="field-even"><p>(list) a list of result.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,7 +244,7 @@ when you encounter a query that ORM cannot complete</p>
 
 <dl class="py class">
 <dt id="aiomyorm.field.DatetimeField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DatetimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 16, 36, 45)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DatetimeField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DatetimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 17, 37, 31)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DatetimeField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A datetime field, default value is now.</p>
 </dd></dl>
@@ -506,14 +506,14 @@ when you encounter a query that ORM cannot complete</p>
 
 <dl class="py class">
 <dt id="aiomyorm.field.TimeField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.timedelta(seconds=59805)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimeField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.timedelta(seconds=63451)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimeField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A time field, default value is now time.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="aiomyorm.field.TimestampField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimestampField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 16, 36, 45)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimestampField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimestampField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 17, 37, 31)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimestampField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A timestamp field, default value is now.</p>
 </dd></dl>
@@ -692,6 +692,25 @@ belongs in the next query or modification.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – An error occurred when argument is not a Field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.execute">
+<em class="property">async classmethod </em><code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.model.Model.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a insert,update or delete query, and return the number of affected rows.You can use this method
+when you encounter a query that ORM cannot complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) affected rows.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -927,6 +946,25 @@ is not allowed in this method, use <code class="docutils literal notranslate"><s
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.select">
+<em class="property">async classmethod </em><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#aiomyorm.model.Model.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a select query, and turn the result into a model object.
+You can use this method when you encounter a query that ORM cannot complete</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) a list of model objects.</p>
 </dd>
 </dl>
 </dd></dl>

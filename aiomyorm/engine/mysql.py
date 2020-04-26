@@ -103,8 +103,8 @@ class _Transaction(_Connection):
 
 async def _select(sql: str,
                   args: Optional[Union[list, tuple]] = (),
-                  conn: Optional[_Connection] = None) -> dict:
-    """execute a select query, and return a dict of result.
+                  conn: Optional[_Connection] = None) -> list:
+    """execute a select query, and return a list of result.
 
         Args:
             sql(str): a sql statement, use ? as placeholder as same as pyMySql.
@@ -112,7 +112,7 @@ async def _select(sql: str,
             conn: use this parameter to specify a custom connection.
 
         Return:
-             (dict) a dict of result.
+             (list) a list of result.
     """
     _logsql(sql, args)
     sql = sql.replace('?', '%s')

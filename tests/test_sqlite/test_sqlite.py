@@ -232,6 +232,10 @@ class ReadTest(aiounittest.AsyncTestCase):
         rs_new = await select('select * from test')
         self.assertListEqual(rs_old, rs_new)
 
+    async def test_class_execute(self):
+        r1 = await Test.select('select * from test')
+        r2 = await Test.find()
+        self.assertListEqual(r1, r2)
 
 class WriteTest(aiounittest.AsyncTestCase):
 

@@ -109,6 +109,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-sql">Complex SQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#use-model-select">use <code class="docutils literal notranslate"><span class="pre">model.select</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-basic-select">use basic <code class="docutils literal notranslate"><span class="pre">select()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execute-insert-update-and-delete">execute insert, update and delete</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
@@ -398,7 +404,7 @@ is based on the filter criteria, and the first matching object is returned.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>The different between ``find_first()`` and ``limit()``</strong>:</p>
+<p><strong>What is the different between</strong> <code class="docutils literal notranslate"><span class="pre">find_first()</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">limit()</span></code> <strong>?</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">Test.find_first()</span></code> will return the first object in table while
 <code class="docutils literal notranslate"><span class="pre">Test.limit(1).find()</span></code> will return a list, although there is only one object in the list.</p>
 </div>
@@ -549,6 +555,82 @@ and return the number of deleted rows.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">update()</span></code> is a classmethod while <code class="docutils literal notranslate"><span class="pre">save()</span></code> is not.</p>
+</div>
+</div>
+</div>
+<div class="section" id="complex-sql">
+<h2>Complex SQL<a class="headerlink" href="#complex-sql" title="Permalink to this headline">¶</a></h2>
+<p>Using ORM framework does not support complex queries
+very well, so sometimes you need to execute custom SQL statements.</p>
+<p>The next example is shown in the following table:</p>
+<img alt="_images/table.png" src="_images/table.png" />
+<div class="section" id="use-model-select">
+<h3>use <code class="docutils literal notranslate"><span class="pre">model.select</span></code><a class="headerlink" href="#use-model-select" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_select_1</span><span class="p">():</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM test WHERE age&gt;(SELECT age FROM test WHERE pk=5002)&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Test</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_select_1</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">9999</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">p2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">p1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-basic-select">
+<h3>use basic <code class="docutils literal notranslate"><span class="pre">select()</span></code><a class="headerlink" href="#use-basic-select" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aiomyorm</span> <span class="kn">import</span> <span class="n">select</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">go_select_2</span><span class="p">():</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">select</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM test WHERE age&gt;(SELECT age FROM test WHERE pk=5002)&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_select_2</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;dict&#39;&gt;
+[{&#39;age&#39;: 21, &#39;birth_place&#39;: &#39;place2&#39;, &#39;grade&#39;: 1, &#39;id&#39;: &#39;&#39;, &#39;pk&#39;: 5001},
+ {&#39;age&#39;: 20, &#39;birth_place&#39;: &#39;p2&#39;, &#39;grade&#39;: 4, &#39;id&#39;: &#39;&#39;, &#39;pk&#39;: 9999},
+ {&#39;age&#39;: 20, &#39;birth_place&#39;: &#39;p1&#39;, &#39;grade&#39;: 1, &#39;id&#39;: &#39; &#39;, &#39;pk&#39;: 10000}]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What’s the difference between</strong> <code class="docutils literal notranslate"><span class="pre">Model.select()</span></code> <strong>and</strong> <code class="docutils literal notranslate"><span class="pre">select()</span></code> <strong>?</strong></p>
+<p>They will all return a list containing query results. The difference is that each item
+in the list returned by <code class="docutils literal notranslate"><span class="pre">select()</span></code> is a dict, while <code class="docutils literal notranslate"><span class="pre">Model.select()</span></code> is a Model object.</p>
+</div>
+</div>
+<div class="section" id="execute-insert-update-and-delete">
+<h3>execute insert, update and delete<a class="headerlink" href="#execute-insert-update-and-delete" title="Permalink to this headline">¶</a></h3>
+<p>To do a custom insert, update or delete, you can use either <code class="docutils literal notranslate"><span class="pre">execute()</span></code>
+or <code class="docutils literal notranslate"><span class="pre">Model.execute()</span></code>, which have the same performance and will return the
+number of rows affected.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_execute</span><span class="p">():</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">execute</span><span class="p">(</span><span class="s1">&#39;UPDATE test set id=&quot;little boy&quot; WHERE age&gt;(SELECT age FROM test WHERE pk=5002)&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">go_execute</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">close_db_connection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
+</pre></div>
 </div>
 <p>Thanks for reading!</p>
 </div>

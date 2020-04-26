@@ -710,6 +710,49 @@ class Model(dict, metaclass=ModelMetaClass):
             return None
 
     @classonlymethod
+    async def select(cls,
+                     sql: str,
+                     args: Optional[Union[list, tuple]] = (),
+                     conn=None) -> list:
+        """
+        Execute a select query, and turn the result into a model object.
+        You can use this method when you encounter a query that ORM cannot complete
+
+        Args:
+            sql(str): a sql statement, use ? as placeholder.
+            args(list or tuple): argument in placeholder.
+            conn: use this parameter to specify a custom connection.
+
+        Return:
+             (list) a list of model objects.
+        """
+        conn = cls._conn
+        cls._clear()
+        rs = await select(sql, args, conn=conn)
+        return [cls(**r) for r in rs]
+
+    @classonlymethod
+    async def execute(cls,
+                      sql: str,
+                      args: Optional[Union[list, tuple]] = (),
+                      conn=None) -> int:
+        """
+        Execute a insert,update or delete query, and return the number of affected rows.You can use this method
+        when you encounter a query that ORM cannot complete.
+
+        Args:
+            sql(str): a sql statement, use ? as placeholder.
+            args(list or tuple): argument in placeholder.
+            conn: use this parameter to specify a custom connection.
+
+        Return:
+              (int) affected rows.
+        """
+        conn = cls._conn
+        cls._clear()
+        return execute(sql, args, conn)
+
+    @classonlymethod
     async def insert(cls, *insert_objects) -> int:
         """
         Insert objects to database.

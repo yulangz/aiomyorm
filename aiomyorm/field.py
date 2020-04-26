@@ -200,12 +200,14 @@ class TextField(Field):
 
 class MediumTextField(Field):
     """A medium text field."""
+
     def __init__(self, primary_key=False, default='', null=False, comment=''):
         super().__init__(column_type='mediumtext', primary_key=primary_key, default=default, null=null, comment=comment)
 
 
 class LongTextField(Field):
     """A long text field."""
+
     def __init__(self, primary_key=False, default='', null=False, comment=''):
         super().__init__(column_type='longtext', primary_key=primary_key, default=default, null=null, comment=comment)
 

@@ -8,7 +8,6 @@ class _Engine(object):
     MYSQL = 1
     SQLITE = 3
     _created = False  # Indicates whether the connection to the database has been created.
-    
 
     @classmethod
     def set_engine(cls, this_engine: str):
@@ -43,7 +42,8 @@ def _set_engine(new_engine: str):
     engine = new_engine.lower()
     if engine == 'mysql':
         _Engine.set_engine('mysql')
-        from .engine.mysql import __create_connection, _close_db_connection, _select, _execute, _Connection, _Transaction
+        from .engine.mysql import __create_connection, _close_db_connection, _select, _execute, _Connection, \
+            _Transaction
     elif engine == 'sqlite':
         _Engine.set_engine('sqlite')
         from .engine.sqlite import __create_connection, _close_db_connection, _select, _execute, _Connection, \
@@ -93,9 +93,9 @@ def Transaction():
 
 def select(sql: str,
            args: Optional[Union[list, tuple]] = (),
-           conn: Optional[Connection] = None) -> dict:
+           conn: Optional[Connection] = None) -> list:
     """
-    Execute a select query, and return a dict of result.You can use this method
+    Execute a select query, and return a list of result.You can use this method
     when you encounter a query that ORM cannot complete
 
     Args:
@@ -104,7 +104,7 @@ def select(sql: str,
         conn: use this parameter to specify a custom connection.
 
     Return:
-         (dict) a dict of result.
+         (list) a list of result.
     """
     return _select(sql, args, conn)
 

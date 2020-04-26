@@ -251,7 +251,7 @@ results::
 
 .. note::
 
-    **The different between ``find_first()`` and ``limit()``**:
+    **What is the different between** ``find_first()`` **and** ``limit()`` **?**
 
     ``Test.find_first()`` will return the first object in table while
     ``Test.limit(1).find()`` will return a list, although there is only one object in the list.
@@ -412,6 +412,92 @@ results::
 .. note::
 
     ``update()`` is a classmethod while ``save()`` is not.
+
+
+Complex SQL
+---------------------
+
+Using ORM framework does not support complex queries
+very well, so sometimes you need to execute custom SQL statements.
+
+The next example is shown in the following table:
+
+.. image:: imgs/table.png
+
+use ``model.select``
+=====================
+
+::
+
+    async def go_select_1():
+        rs = await Test.select('SELECT * FROM test WHERE age>(SELECT age FROM test WHERE pk=5002)')
+        for r in rs:
+            assert isinstance(r, Test)
+        import pprint
+        pprint.pprint(rs)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(go_select_1())
+    loop.run_until_complete(close_db_connection())
+
+results::
+
+    [<Test: {pk:5001, id:, age:21, birth_place:place2, grade:1}>,
+     <Test: {pk:9999, id:, age:20, birth_place:p2, grade:4}>,
+     <Test: {pk:10000, id: , age:20, birth_place:p1, grade:1}>]
+
+use basic ``select()``
+==========================
+
+::
+
+    from aiomyorm import select
+
+    async def go_select_2():
+        rs = await select('SELECT * FROM test WHERE age>(SELECT age FROM test WHERE pk=5002)')
+        print(type(rs[0]))
+        import pprint
+        pprint.pprint(rs)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(go_select_2())
+    loop.run_until_complete(close_db_connection())
+
+results::
+
+    <class 'dict'>
+    [{'age': 21, 'birth_place': 'place2', 'grade': 1, 'id': '', 'pk': 5001},
+     {'age': 20, 'birth_place': 'p2', 'grade': 4, 'id': '', 'pk': 9999},
+     {'age': 20, 'birth_place': 'p1', 'grade': 1, 'id': ' ', 'pk': 10000}]
+
+.. note::
+
+    **What's the difference between** ``Model.select()`` **and** ``select()`` **?**
+
+    They will all return a list containing query results. The difference is that each item
+    in the list returned by ``select()`` is a dict, while ``Model.select()`` is a Model object.
+
+execute insert, update and delete
+=================================
+
+To do a custom insert, update or delete, you can use either ``execute()``
+or ``Model.execute()``, which have the same performance and will return the
+number of rows affected.
+
+::
+
+    async def go_execute():
+        rs = await execute('UPDATE test set id="little boy" WHERE age>(SELECT age FROM test WHERE pk=5002)')
+        print(rs)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(go_execute())
+    loop.run_until_complete(close_db_connection())
+
+results::
+
+    3
+
 
 
 Thanks for reading!
