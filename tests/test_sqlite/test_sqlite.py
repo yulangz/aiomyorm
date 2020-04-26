@@ -237,6 +237,7 @@ class ReadTest(aiounittest.AsyncTestCase):
         r2 = await Test.find()
         self.assertListEqual(r1, r2)
 
+
 class WriteTest(aiounittest.AsyncTestCase):
 
     @classmethod

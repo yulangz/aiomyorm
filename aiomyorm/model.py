@@ -122,7 +122,7 @@ class ModelMetaClass(type):
                     table_extra = field['EXTRA']
                     if table_extra:  # to use table default, such as auto_increment
                         params['default'] = table_default(table_extra)
-                    attrs[field_name] = getattr(_field_map, field_type, Field)(**params)  # Field class in _field_map
+                    attrs[field_name] = _field_map.get(field_type, Field)(**params)  # Field class in _field_map
                     logger.debug('auto set field %s : %s', field_name, attrs[field_name])
 
         mapping = dict()

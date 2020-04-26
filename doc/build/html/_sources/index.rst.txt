@@ -91,9 +91,15 @@ I have a simple test for you.
 
 It's better for you to test in a ``venv``.
 
-You just need::
+first::
 
    pip install -r requirements.txt
+
+Recipe you must install MySQL and configure the user name and password
+in the ``tests/test_mysql/config.py`` file.
+
+then::
+
    make test
 
 License

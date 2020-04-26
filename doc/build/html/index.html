@@ -229,9 +229,14 @@
 <h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
 <p>I have a simple test for you.</p>
 <p>It’s better for you to test in a <code class="docutils literal notranslate"><span class="pre">venv</span></code>.</p>
-<p>You just need:</p>
+<p>first:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">make</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>Recipe you must install MySQL and configure the user name and password
+in the <code class="docutils literal notranslate"><span class="pre">tests/test_mysql/config.py</span></code> file.</p>
+<p>then:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">test</span>
 </pre></div>
 </div>
 </div>
