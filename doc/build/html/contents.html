@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>&lt;no title&gt; &mdash; aiomyorm 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" />
+    <link rel="prev" title="Welcome to aiomyorm’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #ff00ff" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> aiomyorm
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">aiomyorm</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>&lt;no title&gt;</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/contents.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#configuration-database">Configuration database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-model">Create Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#create-table">Create Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#insert-data">Insert data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#query-from-database">Query from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#general-query">General query</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#query-all">query all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#filter-results">filter results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#change-database">change database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#find-first-and-pk-find"><code class="docutils literal notranslate"><span class="pre">find_first()</span></code> and <code class="docutils literal notranslate"><span class="pre">pk_find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="quickstart.html#more-useful-api">more useful API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#aggregate-query">Aggregate query</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#delete-from-database">Delete from database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#delete"><code class="docutils literal notranslate"><span class="pre">delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#update-data">Update data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#complex-sql">Complex SQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#use-model-select">use <code class="docutils literal notranslate"><span class="pre">model.select</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#use-basic-select">use basic <code class="docutils literal notranslate"><span class="pre">select()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#execute-insert-update-and-delete">execute insert, update and delete</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="field.html#basic-field">Basic Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-aiomyorm.field">Integer Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-0">String Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-1">Text Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-2">Decimal Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#module-3">DateTime Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="field.html#more-field">More Field</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to aiomyorm’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, yulansp
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
