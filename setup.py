@@ -20,7 +20,13 @@ setuptools.setup(
         "Documentation": "https://aiomyorm.readthedocs.io",
         "Source Code": "https://github.com/yulansp/aiomyorm",
     },
+    # packages=['aiomyorm', 'tests'],
     packages=setuptools.find_packages(),
+    # package_data={
+    #     "aiomyorm": ["*.py"],
+    #     "tests": ["*.py"],
+    # },
+
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

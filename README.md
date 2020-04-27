@@ -73,6 +73,10 @@ I have a simple test for you.
 It's better for you to test in a ``venv``.
 
 first
+```shell script
+git clone git@github.com:yulansp/aiomyorm.git
+```
+then
 ``` shell script
 pip install -r requirements.txt
 ```

@@ -93,6 +93,10 @@ It's better for you to test in a ``venv``.
 
 first::
 
+   git clone git@github.com:yulansp/aiomyorm.git
+
+then::
+
    pip install -r requirements.txt
 
 Recipe you must install MySQL and configure the user name and password
