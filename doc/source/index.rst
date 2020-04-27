@@ -112,11 +112,7 @@ Contents
 .. toctree::
    :maxdepth: 4
 
-   quickstart
-   set_config
-   model
-   connection
-   field
+   contents
 
 
 Indices and tables

@@ -33,7 +33,6 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="connection" href="connection.html" /> 
@@ -139,6 +138,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="contents.html">&lt;no title&gt;</a> &raquo;</li>
         
       <li>field</li>
     
@@ -385,28 +386,28 @@ but I do not recommend you to use this class. I provide a more customized class 
 <span id="datetime-field"></span><h2>DateTime Field<a class="headerlink" href="#module-3" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="aiomyorm.field.DatetimeField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DatetimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 18, 24, 24)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DatetimeField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DatetimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 27, 14, 26, 39)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DatetimeField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A datetime field, default value is now.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="aiomyorm.field.DateField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DateField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.date(2020, 4, 26)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DateField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DateField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.date(2020, 4, 27)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DateField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A datetime field, default value is today.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="aiomyorm.field.TimeField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.timedelta(seconds=66264)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimeField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.timedelta(seconds=51999)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimeField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A time field, default value is now time.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="aiomyorm.field.TimestampField">
-<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimestampField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 26, 18, 24, 24)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimestampField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimestampField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 27, 14, 26, 39)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimestampField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
 <p>A timestamp field, default value is now.</p>
 </dd></dl>
