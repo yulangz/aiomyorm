@@ -224,7 +224,7 @@ class ReadTest(aiounittest.AsyncTestCase):
         rs_old = await select('select * from test')
         try:
             async with Transaction() as conn:
-                r = await execute('insert into test (id,age,birth_place,grade) values ("00020",18,"北京",1)', conn=conn)
+                r = await execute('insert into test (id,age,birth_place,grade) values ("00020",18,"ppp",1)', conn=conn)
                 100 / 0  # make error
         except Exception:
             pass

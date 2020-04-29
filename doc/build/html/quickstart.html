@@ -114,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#execute-insert-update-and-delete">execute insert, update and delete</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction">Transaction</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
@@ -631,8 +632,60 @@ number of rows affected.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
 </pre></div>
 </div>
-<p>Thanks for reading!</p>
 </div>
+</div>
+<div class="section" id="transaction">
+<h2>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h2>
+<p>Every time aiomyorm accesses the database, transactions will be enabled by default,
+but sometimes you need to perform multiple queries in a transaction. aiomyorm provides this method for you:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">with</span> <span class="n">Transaction</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="c1"># some query ...</span>
+</pre></div>
+</div>
+<p>You only need to use method <code class="docutils literal notranslate"><span class="pre">use()</span></code> or directly specify <code class="docutils literal notranslate"><span class="pre">conn</span></code> in each query to use this <code class="docutils literal notranslate"><span class="pre">conn</span></code>,
+then all queries will be in the same transaction, and if there is an error, it will be automatically rolled back.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">go_transaction</span><span class="p">():</span>
+    <span class="n">rs_old</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+    <span class="n">rs_trans</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">Transaction</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">execute</span><span class="p">(</span><span class="s1">&#39;insert into test (id,age,birth_place,grade) values (&quot;00020&quot;,18,&quot;北京&quot;,1)&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+            <span class="n">rs_trans</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+            <span class="mi">100</span> <span class="o">/</span> <span class="mi">0</span>  <span class="c1"># make error</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">assert</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">rs_new</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;old:&#39;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs_old</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;in transaction:&#39;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs_trans</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;new:&#39;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs_new</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">rs_old</span> <span class="o">==</span> <span class="n">rs_new</span>
+    <span class="k">assert</span> <span class="n">rs_old</span> <span class="o">!=</span> <span class="n">rs_trans</span>
+</pre></div>
+</div>
+<p>results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">old</span><span class="p">:</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="ow">in</span> <span class="n">transaction</span><span class="p">:</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5005</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="mi">00020</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">北京</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="n">new</span><span class="p">:</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5000</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place1</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5001</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place2</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">Test</span><span class="p">:</span> <span class="p">{</span><span class="n">pk</span><span class="p">:</span><span class="mi">5002</span><span class="p">,</span> <span class="nb">id</span><span class="p">:,</span> <span class="n">age</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span> <span class="n">birth_place</span><span class="p">:</span><span class="n">place3</span><span class="p">,</span> <span class="n">grade</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Thanks for reading!</p>
 </div>
 </div>
 

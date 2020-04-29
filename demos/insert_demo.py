@@ -26,5 +26,5 @@ async def go_insert():
 
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(go_save())
+loop.run_until_complete(go_insert())
 loop.run_until_complete(close_db_connection())

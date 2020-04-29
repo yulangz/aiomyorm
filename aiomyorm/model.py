@@ -524,9 +524,12 @@ class Model(dict, metaclass=ModelMetaClass):
         return cls
 
     @classonlymethod
-    async def find(cls):
+    async def find(cls, conn=None):
         """
         Do select.This method will return a list of YourModel objects.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Return:
             (list) A list of YourModel objects.If no record can be found, will return an empty list.
@@ -553,15 +556,21 @@ class Model(dict, metaclass=ModelMetaClass):
             sql = sql + ' LIMIT ? OFFSET ?'
             args.append(cls._limit)
             args.append(cls._limit_offset)
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=conn)
+        rs = await select(sql, args, conn=_conn)
         return [cls(_new_created=False, **r) for r in rs]
 
     @classonlymethod
-    async def find_first(cls):
+    async def find_first(cls, conn=None):
         """
         Do select.This method will directly return one YourModel object instead of a list.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Returns:
             (Model) One YourModel object.If no record can be found, will return None.
@@ -586,16 +595,19 @@ class Model(dict, metaclass=ModelMetaClass):
             sql += ' ' + ','.join(cls._order_by) + ' '
         sql = sql + ' LIMIT ? '
         args.append(1)
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=conn)
+        rs = await select(sql, args, conn=_conn)
         if rs:
             return cls(_new_created=False, **rs[0])
         else:
             return None
 
     @classonlymethod
-    async def pk_find(cls, pk_value):
+    async def pk_find(cls, pk_value, conn=None):
         """
         Get one object by primary key.
 
@@ -605,6 +617,7 @@ class Model(dict, metaclass=ModelMetaClass):
 
         Args:
             pk_value : value of primary key.
+            conn: custom connection (this parameter is optional)
 
         Return:
             (Model) One YourModel object.If no record can be found, will return None.
@@ -614,16 +627,20 @@ class Model(dict, metaclass=ModelMetaClass):
         sql += ','.join(cls._query_fields) + ' FROM ' + cls._get_compatible_table_name()
         sql += " WHERE " + cls._get_compatible_field_name(cls.get_primary_key()) + " =?"
         args = [pk_value]
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=conn)
+        rs = await select(sql, args, conn=_conn)
         if rs:
             return cls(_new_created=False, **rs[0])
         else:
             return None
 
     @classonlymethod
-    async def aggregate(cls, *args, group_by: Optional[Union[str, Field]] = None, **kwargs) \
+    async def aggregate(cls, *args, group_by: Optional[Union[str, Field]] = None, conn=None, **kwargs) \
             -> Union[List[Dict], Dict, NoReturn]:
         """
         Aggregate query.
@@ -634,6 +651,7 @@ class Model(dict, metaclass=ModelMetaClass):
                 Max(), Min(), Count(), Avg(), Sum()
             group_by(str): Same as sql, and only allow one field.
             kwargs: key is the alias of this aggregate field,and value is the aggregate function.
+            conn: custom connection (this parameter is optional)
 
         Returns:
             If the group_by parameter is not specified, will return a dict which key is it's alias and value is
@@ -693,9 +711,12 @@ class Model(dict, metaclass=ModelMetaClass):
                 sql = sql + ' WHERE ' + ' AND '.join(cls._where)
         if group_by:
             sql += ' GROUP BY %s' % group_field
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await select(sql, sqlargs, conn=conn)
+        rs = await select(sql, sqlargs, conn=_conn)
         if rs:
             if group_by:
                 r_dict = {}
@@ -726,9 +747,12 @@ class Model(dict, metaclass=ModelMetaClass):
         Return:
              (list) a list of model objects.
         """
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=conn)
+        rs = await select(sql, args, conn=_conn)
         return [cls(**r) for r in rs]
 
     @classonlymethod
@@ -748,12 +772,15 @@ class Model(dict, metaclass=ModelMetaClass):
         Return:
               (int) affected rows.
         """
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        return execute(sql, args, conn)
+        return execute(sql, args, _conn)
 
     @classonlymethod
-    async def insert(cls, *insert_objects) -> int:
+    async def insert(cls, *insert_objects, conn=None) -> int:
         """
         Insert objects to database.
 
@@ -761,6 +788,7 @@ class Model(dict, metaclass=ModelMetaClass):
 
         Args:
             insert_objects (Model): One or more object of this Model.
+            conn: custom connection (this parameter is optional)
 
         Raise:
             ValueError: An error occurred when argument is not the object of this model.
@@ -792,18 +820,24 @@ class Model(dict, metaclass=ModelMetaClass):
         sql = 'INSERT INTO ' + cls._get_compatible_table_name() + \
               ' (%s) VALUES %s' % (','.join(insert_field),
                                    ','.join(['(' + ','.join(['?'] * len(insert_field)) + ')'] * object_num))
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, multiple_args, conn=conn)
+        rs = await execute(sql, multiple_args, conn=_conn)
         return rs
 
     @classonlymethod
-    async def update(cls, **kwargs) -> int:
+    async def update(cls, conn=None, **kwargs) -> int:
         """
         Update objects to database.
 
         You can use ``filter()`` and other method to filter the objects that want to update,\
         just as you did in ``find()``.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Return:
             (int) Total number of objects updated.
@@ -824,17 +858,23 @@ class Model(dict, metaclass=ModelMetaClass):
                 sql = sql + ' WHERE ' + ' OR '.join(cls._where)
             else:
                 sql = sql + ' WHERE ' + ' AND '.join(cls._where)
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, args, conn=conn)
+        rs = await execute(sql, args, conn=_conn)
         return rs
 
     @classonlymethod
-    async def delete(cls) -> int:
+    async def delete(cls, conn=None) -> int:
         """Delete objects from database.
 
         You can use ``filter()`` and other method to filter the objects that want to delete,\
         just as you did in ``find()``.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Return:
             (int) Total number of objects deleted.
@@ -851,9 +891,12 @@ class Model(dict, metaclass=ModelMetaClass):
                 sql = sql + ' WHERE ' + ' OR '.join(cls._where)
             else:
                 sql = sql + ' WHERE ' + ' AND '.join(cls._where)
-        conn = cls._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, args, conn=conn)
+        rs = await execute(sql, args, conn=_conn)
         return rs
 
     @classonlymethod
@@ -919,9 +962,12 @@ class Model(dict, metaclass=ModelMetaClass):
         else:
             print('not create.')
 
-    async def save(self) -> NoReturn:
+    async def save(self, conn=None) -> NoReturn:
         """
         Save this object to database.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Raise:
             RuntimeError: An error occurred when failed to save this object.
@@ -957,15 +1003,21 @@ class Model(dict, metaclass=ModelMetaClass):
                   ','.join([self._get_compatible_field_name(_) + '=?' for _ in update_field]) + \
                   ' WHERE ' + self._get_compatible_field_name(pk) + '=?'
             args.append(self._pk_value)
-        conn = self._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = self._conn
         self._conn = None
-        rs = await execute(sql, args, conn=conn)
+        rs = await execute(sql, args, conn=_conn)
         if rs != 1:
             raise RuntimeError('Failed to save object %s' % self)
 
-    async def remove(self) -> NoReturn:
+    async def remove(self, conn=None) -> NoReturn:
         """
         Remove this object from database.
+
+        Args:
+            conn: custom connection (this parameter is optional)
 
         Raise:
             RuntimeError: An error occurred when can not find a primary key of this object.
@@ -986,9 +1038,12 @@ class Model(dict, metaclass=ModelMetaClass):
         sql = 'DELETE FROM ' + self._get_compatible_table_name() + \
               ' WHERE %s=? ' % (self._get_compatible_field_name(pk))
         args = [pk_value]
-        conn = self._conn
+        if conn:
+            _conn = conn
+        else:
+            _conn = self._conn
         self._conn = None
-        rs = await execute(sql, args, conn=conn)
+        rs = await execute(sql, args, conn=_conn)
         if rs == 0:
             logger.warning('object %s is not in the database' % self)
 

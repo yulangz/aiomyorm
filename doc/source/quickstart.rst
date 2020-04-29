@@ -499,5 +499,58 @@ results::
     3
 
 
+Transaction
+---------------------
+
+Every time aiomyorm accesses the database, transactions will be enabled by default,
+but sometimes you need to perform multiple queries in a transaction. aiomyorm provides this method for you::
+
+    async with Transaction() as conn:
+        # some query ...
+
+You only need to use method ``use()`` or directly specify ``conn`` in each query to use this ``conn``,
+then all queries will be in the same transaction, and if there is an error, it will be automatically rolled back.
+
+::
+
+    async def go_transaction():
+        rs_old = await Test.find()
+        rs_trans = None
+        try:
+            async with Transaction() as conn:
+                r = await execute('insert into test (id,age,birth_place,grade) values ("00020",18,"北京",1)', conn=conn)
+                rs_trans = await Test.use(conn).find()
+                100 / 0  # make error
+        except ZeroDivisionError:
+            pass
+        assert r == 1
+        rs_new = await Test.find()
+
+        import pprint
+        print('old:')
+        pprint.pprint(rs_old)
+        print('in transaction:')
+        pprint.pprint(rs_trans)
+        print('new:')
+        pprint.pprint(rs_new)
+
+        assert rs_old == rs_new
+        assert rs_old != rs_trans
+
+results::
+
+    old:
+    [<Test: {pk:5000, id:, age:19, birth_place:place1, grade:0}>,
+     <Test: {pk:5001, id:, age:21, birth_place:place2, grade:0}>,
+     <Test: {pk:5002, id:, age:19, birth_place:place3, grade:0}>]
+    in transaction:
+    [<Test: {pk:5000, id:, age:19, birth_place:place1, grade:0}>,
+     <Test: {pk:5001, id:, age:21, birth_place:place2, grade:0}>,
+     <Test: {pk:5002, id:, age:19, birth_place:place3, grade:0}>,
+     <Test: {pk:5005, id:00020, age:18, birth_place:北京, grade:1}>]
+    new:
+    [<Test: {pk:5000, id:, age:19, birth_place:place1, grade:0}>,
+     <Test: {pk:5001, id:, age:21, birth_place:place2, grade:0}>,
+     <Test: {pk:5002, id:, age:19, birth_place:place3, grade:0}>]
 
 Thanks for reading!
