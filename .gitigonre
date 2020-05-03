@@ -1,0 +1,15 @@
+*.swp
+*.bak
+*.egg
+*.egg-info
+*.eggs
+*.pyc
+*.pyd
+*.pyo
+*.so
+*.tar.gz
+built
+aiomyorm.egg-info
+dist
+docs/build
+.vs
