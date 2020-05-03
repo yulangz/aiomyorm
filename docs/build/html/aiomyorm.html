@@ -1,0 +1,1209 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>connection &mdash; aiomyorm 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #ff00ff" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> aiomyorm
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set_config.html">set_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">aiomyorm</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>connection</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/aiomyorm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-aiomyorm.connection">
+<span id="connection"></span><h1>connection<a class="headerlink" href="#module-aiomyorm.connection" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="aiomyorm.connection.Connection">
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">Connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.connection.Connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A async context manager to run a custom sql statement.</p>
+<p>Creates new connection.Returns a Connection instance.
+You can also use this connection in ORM by specifying the conn parameter.
+If you have not set autocommit=True, you should commit manual by use <code class="docutils literal notranslate"><span class="pre">conn.commit()</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.connection.Transaction">
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">Transaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.connection.Transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a connection to do atomic transaction.</p>
+<p>This is a subclass of Connection and they have the same usage,
+and on exit, this connection will automatically commit or roll back on error.
+You can also use this connection in ORM by specifying the conn parameter.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="n">whit</span> <span class="n">connection</span><span class="o">.</span><span class="n">Transaction</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">Table</span><span class="p">(</span><span class="n">tl1</span><span class="o">=</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="n">tl2</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">conn</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.connection.close_db_connection">
+<em class="property">async </em><code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">close_db_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.connection.close_db_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close connection with database.You may sometime need it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.connection.execute">
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="connection.html#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.connection.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a insert,update or delete query, and return the number of affected rows.You can use this method
+when you encounter a query that ORM cannot complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) affected rows.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.connection.select">
+<code class="sig-prename descclassname">aiomyorm.connection.</code><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="connection.html#aiomyorm.connection.Connection" title="aiomyorm.connection.Connection">aiomyorm.connection.Connection</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#aiomyorm.connection.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a select query, and return a list of result.You can use this method
+when you encounter a query that ORM cannot complete</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) a list of result.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-aiomyorm.field">
+<span id="field"></span><h1>field<a class="headerlink" href="#module-aiomyorm.field" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="aiomyorm.field.BigIntField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">BigIntField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unsigned</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.BigIntField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A bigint field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.BoolField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">BoolField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.BoolField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A bool field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.DateField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DateField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.date(2020, 4, 29)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DateField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A datetime field, default value is today.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.DatetimeField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DatetimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 29, 20, 35, 10)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DatetimeField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A datetime field, default value is now.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.DecimalField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DecimalField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">65</span></em>, <em class="sig-param"><span class="n">decimal_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">30</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DecimalField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A decimal field which is more precise than float or double.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total_digits</strong> (<em>int</em>) – total digit for this float, default by 65.</p></li>
+<li><p><strong>decimal_digits</strong> (<em>int</em>) – total decimal digit, default by 30.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.DoubleField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">DoubleField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">255</span></em>, <em class="sig-param"><span class="n">decimal_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">30</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.DoubleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A double field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total_digits</strong> (<em>int</em>) – total digit for this float, default by 255.</p></li>
+<li><p><strong>decimal_digits</strong> (<em>int</em>) – total decimal digit, default by 30.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.Field">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">Field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_type</span></em>, <em class="sig-param"><span class="n">default</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">unsigned</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A field is a mapping of a column in mysql table.</p>
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.column_type">
+<code class="sig-name descname">column_type</code><a class="headerlink" href="#aiomyorm.field.Field.column_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of this column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.primary_key">
+<code class="sig-name descname">primary_key</code><a class="headerlink" href="#aiomyorm.field.Field.primary_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether is a primary key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.default">
+<code class="sig-name descname">default</code><a class="headerlink" href="#aiomyorm.field.Field.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default value of this column, it can be a real value or a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.belong_model">
+<code class="sig-name descname">belong_model</code><a class="headerlink" href="#aiomyorm.field.Field.belong_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>The model(table) this field(column) belongs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.comment">
+<code class="sig-name descname">comment</code><a class="headerlink" href="#aiomyorm.field.Field.comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment of this field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.null">
+<code class="sig-name descname">null</code><a class="headerlink" href="#aiomyorm.field.Field.null" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow null value or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="aiomyorm.field.Field.unsigned">
+<code class="sig-name descname">unsigned</code><a class="headerlink" href="#aiomyorm.field.Field.unsigned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether unsigned. Only useful in Integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id0">
+<em class="property">property </em><code class="sig-name descname">belong_model</code><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.field.Field.between">
+<code class="sig-name descname">between</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val1</span></em>, <em class="sig-param"><span class="n">val2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field.between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limit the value of this field between val1 and val2, Both sides of the border will be taken.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id1">
+<em class="property">property </em><code class="sig-name descname">column_type</code><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id2">
+<em class="property">property </em><code class="sig-name descname">comment</code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id3">
+<em class="property">property </em><code class="sig-name descname">default</code><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.field.Field.end_with">
+<code class="sig-name descname">end_with</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field.end_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain a string field end whit the val.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.field.Field.has">
+<code class="sig-name descname">has</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field.has" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain Val in a string field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.field.Field.like">
+<code class="sig-name descname">like</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field.like" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuzzy query of a string field, the format is the same as MySQL</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id4">
+<em class="property">property </em><code class="sig-name descname">null</code><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id5">
+<em class="property">property </em><code class="sig-name descname">primary_key</code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.field.Field.start_with">
+<code class="sig-name descname">start_with</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.Field.start_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain a string field start whit the val.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id6">
+<em class="property">property </em><code class="sig-name descname">unsigned</code><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.FixedStringField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">FixedStringField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">255</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.FixedStringField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A fixed length string field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.FloatField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">FloatField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">255</span></em>, <em class="sig-param"><span class="n">decimal_digits</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">30</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.FloatField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A float field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>total_digits</strong> (<em>int</em>) – total digit for this float, default by 255.</p></li>
+<li><p><strong>decimal_digits</strong> (<em>int</em>) – total decimal digit, default by 30.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.IntField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">IntField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unsigned</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.IntField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A int field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.LongTextField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">LongTextField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.LongTextField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A long text field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.MediumIntField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">MediumIntField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unsigned</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.MediumIntField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A mediumint field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.MediumTextField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">MediumTextField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.MediumTextField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A medium text field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.SmallIntField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">SmallIntField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">unsigned</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.SmallIntField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A smallint field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.StringField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">StringField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">255</span></em>, <em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.StringField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A string field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – Maximum length of string in this field, default by 255.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.TextField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TextField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TextField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A text field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.TimeField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimeField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.timedelta(seconds=74110)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimeField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A time field, default value is now time.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.field.TimestampField">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">TimestampField</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">primary_key</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">datetime.datetime(2020, 4, 29, 20, 35, 10)</span></em>, <em class="sig-param"><span class="n">null</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">comment</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.TimestampField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiomyorm.field.Field</span></code></a></p>
+<p>A timestamp field, default value is now.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.field.auto_increment">
+<code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">auto_increment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.auto_increment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set default value to auto increment.</p>
+<p>If you use this as default value, you should make sure this field in your
+database has a auto increment constrain.
+If you use aiomyorm to create table, auto increment constrain will be set
+to database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.field.table_default">
+<code class="sig-prename descclassname">aiomyorm.field.</code><code class="sig-name descname">table_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.field.table_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Let default as same as table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>str</em>) – default value in table.</p></li>
+<li><p><strong>e.g.</strong> – ‘ON UPDATE CURRENT_TIMESTAMP(0)’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-aiomyorm.model">
+<span id="model"></span><h1>model<a class="headerlink" href="#module-aiomyorm.model" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="aiomyorm.model.Avg">
+<code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Avg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n"><a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field">aiomyorm.field.Field</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Avg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.model.Count">
+<code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Count</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.model.Max">
+<code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Max</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n"><a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field">aiomyorm.field.Field</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.model.Min">
+<code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Min</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n"><a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field">aiomyorm.field.Field</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.model.Model">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_new_created</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">_pk_value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>The basic model class.</p>
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">__table_\_</code></dt>
+<dd><p>The table name of this model.If you do not set this attribute,
+class name will be used by default.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">__auto_\_</code></dt>
+<dd><p>If true, fields will automatically retrieved from the table, default False.
+<strong>Warnings: __auto__ dose not support sqlite.</strong></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">the field you define</code></dt>
+<dd><p>All the fields you define. In class it will be field while in instance it is
+the value of this field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.aggregate">
+<em class="property">async classmethod </em><code class="sig-name descname">aggregate</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">group_by</span><span class="p">:</span> <span class="n">Union[str, aiomyorm.field.Field, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>List<span class="p">[</span>Dict<span class="p">]</span><span class="p">, </span>Dict<span class="p">, </span>NoReturn<span class="p">]</span><a class="headerlink" href="#aiomyorm.model.Model.aggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – <p>aggregate function, it’s alias will be taken as <code class="docutils literal notranslate"><span class="pre">(function)__(field</span> <span class="pre">name)</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">MAX__age</span></code>.
+you can use the follow aggregate function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Max</span><span class="p">(),</span> <span class="n">Min</span><span class="p">(),</span> <span class="n">Count</span><span class="p">(),</span> <span class="n">Avg</span><span class="p">(),</span> <span class="n">Sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>group_by</strong> (<em>str</em>) – Same as sql, and only allow one field.</p></li>
+<li><p><strong>kwargs</strong> – key is the alias of this aggregate field,and value is the aggregate function.</p></li>
+<li><p><strong>conn</strong> – custom connection (this parameter is optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the group_by parameter is not specified, will return a dict which key is it’s alias and value is
+it’s result.
+If the group_by parameter is specified, will return a dict which key is the result of the group_by field
+in each group, and value is a dict as same as the first situation.</p>
+</dd>
+</dl>
+<dl>
+<dt>Sample:</dt><dd><p>you can run this code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">model</span> <span class="kn">import</span> <span class="n">Max</span><span class="p">,</span><span class="n">Count</span><span class="p">,</span><span class="n">Min</span><span class="p">,</span><span class="n">Avg</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Test</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Max</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">minage</span><span class="o">=</span><span class="n">Min</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span> <span class="n">avgage</span><span class="o">=</span><span class="n">Avg</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">),</span>
+                                              <span class="n">groupnum</span><span class="o">=</span><span class="n">Count</span><span class="p">(),</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;birth_place&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>you will get the result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;someplace&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;MAX__age&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;avgage&#39;</span><span class="p">:</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s1">&#39;groupnum&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;minage&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+ <span class="s1">&#39;someplace1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;MAX__age&#39;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span> <span class="s1">&#39;avgage&#39;</span><span class="p">:</span> <span class="mf">20.5</span><span class="p">,</span> <span class="s1">&#39;groupnum&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;minage&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span>
+ <span class="s1">&#39;someplace3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;MAX__age&#39;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s1">&#39;avgage&#39;</span><span class="p">:</span> <span class="mf">17.0</span><span class="p">,</span> <span class="s1">&#39;groupnum&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;minage&#39;</span><span class="p">:</span> <span class="mi">17</span><span class="p">}}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.change_db">
+<em class="property">classmethod </em><code class="sig-name descname">change_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.change_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the database this model belongs to.</p>
+<p><strong>Warnings: not support sqlite</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.change_db_one_time">
+<em class="property">classmethod </em><code class="sig-name descname">change_db_one_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.change_db_one_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the database one time.</p>
+<p>You can use this method temporarily change the database this model
+belongs in the next query or modification.</p>
+<p>e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Model</span><span class="o">.</span><span class="n">change_db_one_time</span><span class="p">(</span><span class="n">newdb</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This query will be performed in newdb.</p>
+<p><strong>Warnings: not support sqlite</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.create_table">
+<em class="property">async classmethod </em><code class="sig-name descname">create_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.create_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create this table in current database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.delete">
+<em class="property">async classmethod </em><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.model.Model.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete objects from database.</p>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">filter()</span></code> and other method to filter the objects that want to delete,        just as you did in <code class="docutils literal notranslate"><span class="pre">find()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) Total number of objects deleted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.distinct">
+<em class="property">classmethod </em><code class="sig-name descname">distinct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.distinct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add DISTINCT condition for your query.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.exclude">
+<em class="property">classmethod </em><code class="sig-name descname">exclude</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#aiomyorm.model.Model.exclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude filter your query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – the field you wang to exclude and it’s value.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – An error occurred when argument is not a Field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.execute">
+<em class="property">async classmethod </em><code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.model.Model.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a insert,update or delete query, and return the number of affected rows.You can use this method
+when you encounter a query that ORM cannot complete.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) affected rows.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.filter">
+<em class="property">classmethod </em><code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#aiomyorm.model.Model.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter your query,correspond to where key=value in sql.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Kwargs</strong> – The field you wang to filter and it’s value.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – An error occurred when argument is not a Field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.find">
+<em class="property">async classmethod </em><code class="sig-name descname">find</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do select.This method will return a list of YourModel objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) A list of YourModel objects.If no record can be found, will return an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.find_first">
+<em class="property">async classmethod </em><code class="sig-name descname">find_first</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.find_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do select.This method will directly return one YourModel object instead of a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(Model) One YourModel object.If no record can be found, will return None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.flex_exclude">
+<em class="property">classmethod </em><code class="sig-name descname">flex_exclude</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">conditions</span><span class="p">:</span> <span class="n">Tuple</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.flex_exclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude your query flexibly, such as ‘&gt;’ ‘&lt;’ and so on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>field you wang to exclude and it's value.</strong> (<em>The</em>) – </p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>You can use the following methods:</dt><dd><p>same as <code class="docutils literal notranslate"><span class="pre">flex_filtter()</span></code></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – An error occurred when you use it in the wrong way.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.flex_filter">
+<em class="property">classmethod </em><code class="sig-name descname">flex_filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">conditions</span><span class="p">:</span> <span class="n">Tuple</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.flex_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter your query flexibly, such as ‘&gt;’ ‘&lt;’ and so on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conditions</strong> – The field you wang to filter and it’s value.</p>
+</dd>
+</dl>
+<p>You can use the following methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&gt;</span><span class="mi">100</span><span class="p">)</span>               <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&gt;</span><span class="mi">100</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&gt;=</span><span class="mi">100</span><span class="p">)</span>              <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&gt;=</span><span class="mi">100</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">==</span><span class="mi">100</span><span class="p">)</span>              <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">=</span><span class="mi">100</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&lt;=</span><span class="mi">100</span><span class="p">)</span>              <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&lt;=</span><span class="mi">100</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span>               <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">&lt;</span><span class="mi">100</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%a</span><span class="s1">bc%&#39;</span><span class="p">))</span>     <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span> <span class="n">LIKE</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">bc%&#39;</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">start_with</span><span class="p">(</span><span class="n">abc</span><span class="p">))</span>   <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span> <span class="n">LIKE</span> <span class="s1">&#39;abc%&#39;</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">end_with</span><span class="p">(</span><span class="n">abc</span><span class="p">))</span>     <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span> <span class="n">LIKE</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">bc&#39;</span>
+<span class="n">flex_filter</span><span class="p">(</span><span class="n">Table</span><span class="o">.</span><span class="n">Field</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">))</span>        <span class="o">--</span><span class="ow">in</span> <span class="n">sql</span><span class="o">--&gt;</span>  <span class="n">where</span> <span class="n">Table</span><span class="o">.</span><span class="n">Field</span> <span class="n">LIKE</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">bc%&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – An error occurred when you use it in the wrong way.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.get_db">
+<em class="property">classmethod </em><code class="sig-name descname">get_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.get_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the database this model belongs to.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.get_fields">
+<em class="property">classmethod </em><code class="sig-name descname">get_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.get_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the names of all fields</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.get_mapping">
+<em class="property">classmethod </em><code class="sig-name descname">get_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.get_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fields mapping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.get_primary_key">
+<em class="property">classmethod </em><code class="sig-name descname">get_primary_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.get_primary_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the name of the primary key</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.insert">
+<em class="property">async classmethod </em><code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">insert_objects</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.model.Model.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert objects to database.</p>
+<p>This method can insert multiple objects and access the database only once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>insert_objects</strong> (<a class="reference internal" href="model.html#aiomyorm.model.Model" title="aiomyorm.model.Model"><em>Model</em></a>) – One or more object of this Model.</p></li>
+<li><p><strong>conn</strong> – custom connection (this parameter is optional)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Raise:</dt><dd><p>ValueError: An error occurred when argument is not the object of this model.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(int) Affected rows.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.limit">
+<em class="property">classmethod </em><code class="sig-name descname">limit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em>, <em class="sig-param"><span class="n">offset</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.or_connect">
+<em class="property">classmethod </em><code class="sig-name descname">or_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.or_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect your filter br ‘OR’ rather than ‘AND’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.order_by">
+<em class="property">classmethod </em><code class="sig-name descname">order_by</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.order_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort query results.</p>
+<p>By default, it will be sorted from small to large. You can sort it from large to small by adding ‘-‘.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> – (str) The sorting basis you specified.</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+<span class="c1"># will sort by id from small to large</span>
+<span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+<span class="c1"># will sort by id from large to small</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.pk_find">
+<em class="property">async classmethod </em><code class="sig-name descname">pk_find</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pk_value</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.pk_find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get one object by primary key.</p>
+<p>You should specify the primary key in this method.
+All the restrictions you have made before, except “<code class="docutils literal notranslate"><span class="pre">query()</span></code>”, will not take effect.
+This method will directly return one YourModel object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pk_value</strong> – value of primary key.</p></li>
+<li><p><strong>conn</strong> – custom connection (this parameter is optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(Model) One YourModel object.If no record can be found, will return None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.query">
+<em class="property">classmethod </em><code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union[str, aiomyorm.field.Field, None]</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#aiomyorm.model.Model.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choice the field you want to query.</p>
+<p>All the query method such as <code class="docutils literal notranslate"><span class="pre">find()</span></code> will query all the fields by default,
+so if you want to query all fields, just do not use this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> – The field you wang to query.You can use Model.Field or the name of field.</p>
+</dd>
+</dl>
+<p>e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">()</span>
+<span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – An error occurred when argument is not a Field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.remove">
+<em class="property">async </em><code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="headerlink" href="#aiomyorm.model.Model.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove this object from database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Raise:</dt><dd><p>RuntimeError: An error occurred when can not find a primary key of this object.
+since every object queried from the database will query primary key explicitly
+or implicitly, this error will only appear when the newly created object calls
+the <code class="docutils literal notranslate"><span class="pre">remove()</span></code> method, which itself is the wrong use. To delete an object without
+querying in advance, use <code class="docutils literal notranslate"><span class="pre">delete()</span></code> method.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.save">
+<em class="property">async </em><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="headerlink" href="#aiomyorm.model.Model.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save this object to database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Raise:</dt><dd><p>RuntimeError: An error occurred when failed to save this object.
+AttributeError: An error occurred when primary key has been changed, which
+is not allowed in this method, use <code class="docutils literal notranslate"><span class="pre">update()</span></code>.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.select">
+<em class="property">async classmethod </em><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sql</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union[list, tuple, None]</span> <span class="o">=</span> <span class="default_value">()</span></em>, <em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#aiomyorm.model.Model.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a select query, and turn the result into a model object.
+You can use this method when you encounter a query that ORM cannot complete</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sql</strong> (<em>str</em>) – a sql statement, use ? as placeholder.</p></li>
+<li><p><strong>args</strong> (<em>list</em><em> or </em><em>tuple</em>) – argument in placeholder.</p></li>
+<li><p><strong>conn</strong> – use this parameter to specify a custom connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) a list of model objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.update">
+<em class="property">async classmethod </em><code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#aiomyorm.model.Model.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update objects to database.</p>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">filter()</span></code> and other method to filter the objects that want to update,        just as you did in <code class="docutils literal notranslate"><span class="pre">find()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>conn</strong> – custom connection (this parameter is optional)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(int) Total number of objects updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="aiomyorm.model.Model.use">
+<em class="property">classmethod </em><code class="sig-name descname">use</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conn</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Model.use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a connection.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.model.ModelMetaClass">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">ModelMetaClass</code><a class="headerlink" href="#aiomyorm.model.ModelMetaClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+<p>Metaclass for Model class</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.model.Sum">
+<code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">Sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n"><a class="reference internal" href="field.html#aiomyorm.field.Field" title="aiomyorm.field.Field">aiomyorm.field.Field</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.model.Sum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="aiomyorm.model.classonlymethod">
+<em class="property">class </em><code class="sig-prename descclassname">aiomyorm.model.</code><code class="sig-name descname">classonlymethod</code><a class="headerlink" href="#aiomyorm.model.classonlymethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">classmethod</span></code></p>
+<p>Convert a function to be a class only method.</p>
+<p>This has the same usage as classmethod, except that it can only be used in class.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-aiomyorm.set_config">
+<span id="set-config"></span><h1>set_config<a class="headerlink" href="#module-aiomyorm.set_config" title="Permalink to this headline">¶</a></h1>
+<p>Config your database.</p>
+<p>The best way is to include a config.py file in your project, and then a dict
+named aiomyorm, which contains your database configuration, as follow:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aiomyorm</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;maxsize&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;123456&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;db&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;engine&#39;</span><span class="p">:</span> <span class="s1">&#39;mysql&#39;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>By default, you need to include the config.py file in the same level directory
+of your main file. You can call the set_config_model() method to specify the
+location of the config file again, as follow:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_config_model</span><span class="p">(</span><span class="s1">&#39;myconfigdirectory.myconfig&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you don’t want to configure the config.py file, you can also call the set_config()
+method to configure your database connection, as follow:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">set_config</span><span class="p">(</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;sqlite&#39;</span><span class="p">,</span>
+   <span class="n">db</span><span class="o">=</span><span class="s1">&#39;test.db&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>configuration options:</dt><dd><dl class="simple">
+<dt>common:</dt><dd><ul class="simple">
+<li><p>engine (str) : database engine (<code class="docutils literal notranslate"><span class="pre">'mysql',</span> <span class="pre">'sqlite'</span></code>)</p></li>
+</ul>
+</dd>
+<dt>for sqlite:</dt><dd><ul class="simple">
+<li><p>db (str) : the database file for sqlite.</p></li>
+<li><p>other options : same as sqlite3.</p></li>
+</ul>
+</dd>
+<dt>for mysql:</dt><dd><ul class="simple">
+<li><p>db (str) :        database to use, None to not use a particular one.</p></li>
+<li><p>minsize (int) : minimum sizes of the pool.</p></li>
+<li><p>maxsize (int) : maximum sizes of the pool.</p></li>
+<li><p>echo (bool) : executed log SQL queryes default : False.</p></li>
+<li><p>debug (bool) : echo the debug log default : False.</p></li>
+<li><p>host (str) :      host where the database server is located, default : localhost.</p></li>
+<li><p>port (str) :      MySQL port to use, default : 3306.</p></li>
+<li><p>user (str) :      username to log in as.</p></li>
+<li><p>password (str) : password to use.</p></li>
+<li><p>unix_socket (str) :optionally, you can use a unix socket rather than TCP/IP.</p></li>
+<li><p>charset (str) : charset you want to use, for example ‘utf8’.</p></li>
+<li><p>sql_mode: default sql-mode to use, like ‘NO_BACKSLASH_ESCAPES’</p></li>
+<li><p>read_default_file : specifies my.cnf file to read these parameters                from under the [client] section.See aiomysql.</p></li>
+<li><p>conv : decoders dictionary to use instead of the default one.                This is used to provide custom marshalling of types. See pymysql.converters.</p></li>
+<li><p>client_flag : custom flags to send to MySQL. Find potential values in pymysql.constants.CLIENT.</p></li>
+<li><p>use_unicode : whether or not to default to unicode strings.</p></li>
+<li><p>connect_timeout : Timeout in seconds before throwing an exception when connecting.</p></li>
+<li><p>autocommit : Autocommit mode. None means use server default. (default: False)</p></li>
+<li><p>ssl : Optional SSL Context to force SSL</p></li>
+<li><p>server_public_key : SHA256 authenticaiton plugin public key value.</p></li>
+<li><p>read_default_group (str) : Group to read from in the configuration file.</p></li>
+<li><p>no_delay (bool) : disable Nagle’s algorithm on the socket</p></li>
+<li><p>auth_plugin: String to manually specify the authentication plugin to use, i.e you will want to use</p></li>
+<li><p>mysql_clear_password when using IAM authentication with Amazon RDS. (default: Server Default)</p></li>
+<li><p>program_name: Program name string to provide when handshaking with MySQL. (default: sys.argv[0])</p></li>
+<li><p>server_public_key: SHA256 authenticaiton plugin public key value.</p></li>
+<li><p>loop : is an optional event loop instance, asyncio.get_event_loop() is used if loop is not specified.</p></li>
+<li><p>init_command (str) : initial SQL statement to run when connection is established.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>default:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">minsize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">maxsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+<span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+<span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">unix_socket</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">charset</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="n">sql_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">use_unicode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">read_default_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">connect_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">autocommit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">ssl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">server_public_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">auth_plugin</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="n">program_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="n">read_default_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="n">no_delay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">init_command</span><span class="o">=</span><span class="kc">None</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt id="aiomyorm.set_config.set_config">
+<code class="sig-prename descclassname">aiomyorm.set_config.</code><code class="sig-name descname">set_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.set_config.set_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set configs manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – see module’s __doc__ configuration options.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.set_config.set_config_model">
+<code class="sig-prename descclassname">aiomyorm.set_config.</code><code class="sig-name descname">set_config_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_model</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.set_config.set_config_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a custom model as config model.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.set_config.set_loop">
+<code class="sig-prename descclassname">aiomyorm.set_config.</code><code class="sig-name descname">set_loop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.set_config.set_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>set a event loop.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="aiomyorm.set_config.unset_loop">
+<code class="sig-prename descclassname">aiomyorm.set_config.</code><code class="sig-name descname">unset_loop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#aiomyorm.set_config.unset_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>unset the event loop.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, yulansp
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
