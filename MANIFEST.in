@@ -1,1 +1,9 @@
-include LICENSE README.md
+include LICENSE README.md Makefile
+graft aiomyorm demos docs tests
+global-exclude *.pyc
+global-exclude *.pyd
+global-exclude *.so
+global-exclude *.lib
+global-exclude *.dll
+global-exclude *.a
+global-exclude *.obj
