@@ -9,5 +9,5 @@ logger = logging.getLogger(__package__)
 def _logsql(sql, args=()):
     args = tuple(args)
     for arg in args:
-        sql = sql.replace('?', str(arg), 1)
+        sql = str(sql).replace('?', str(arg), 1)
     logger.info(sql)

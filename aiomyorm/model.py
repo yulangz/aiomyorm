@@ -10,19 +10,8 @@ from .field import Field, _field_map, _integer_field, _varchar_field, _datetime_
 from .connection import select, execute, _create_connection, _Engine
 from .set_config import _get_config, _get_loop
 from .log import logger
-
-
-class classonlymethod(classmethod):
-    """
-    Convert a function to be a class only method.
-
-    This has the same usage as classmethod, except that it can only be used in class.
-    """
-
-    def __get__(self, instance, owner):
-        if instance is not None:
-            raise AttributeError("Method %s() is only allowed in class." % self.__func__.__name__)
-        return super().__get__(instance, owner)
+from .lib import StringBuff
+from .lib import classonlymethod
 
 
 class ModelMetaClass(type):
@@ -31,8 +20,8 @@ class ModelMetaClass(type):
     def __new__(cls, name, bases, attrs):
         if name == 'Model':
             return type.__new__(cls, name, bases, attrs)
-        tablename = attrs.get('__table__', None) or name
-        logger.debug('Find Model: %s (%s)' % (name, tablename))
+        table_name = attrs.get('__table__', None) or name
+        logger.debug('Find Model: %s (%s)' % (name, table_name))
         loop = _get_loop()
         if not loop:
             loop = asyncio.get_event_loop()
@@ -59,7 +48,7 @@ class ModelMetaClass(type):
                 INFORMATION_SCHEMA.COLUMNS
             WHERE
                 TABLE_SCHEMA = ? AND
-                TABLE_NAME = ?""", (_get_config()['db'], tablename)))
+                TABLE_NAME = ?""", (_get_config()['db'], table_name)))
             # method __new__ dose not allow await, and this method will only use once when create model class,
             # so blocking call with run_until_complete() will not cause blocking at run time.
             loop.run_until_complete(task)
@@ -145,13 +134,13 @@ class ModelMetaClass(type):
             raise RuntimeError("Can not find a primary key")
 
         attrs['_db'] = attrs['_current_db'] = _get_config()['db']
-        attrs['__table__'] = tablename
+        attrs['__table__'] = table_name
         attrs['__auto__'] = auto
         attrs['_mapping'] = mapping
         attrs['_primary_key'] = primary_key
         attrs['_fields'] = fields
         attrs['_fields_without_pk'] = [f for f in fields if f != primary_key]
-        attrs['_query_fields'] = ['`%s`.`%s`' % (tablename, f) for f in fields]
+        attrs['_query_fields'] = ['`%s`.`%s`' % (table_name, f) for f in fields]
         attrs['_where'] = []
         attrs['_where_args'] = []
         attrs['_exclude'] = []
@@ -316,11 +305,11 @@ class Model(dict, metaclass=ModelMetaClass):
     def _get_compatible_field_name(cls, field):
         """Check if parameter f is in the fields, then return it's name."""
 
-        def _get_compatible_field_name(field):
+        def _get_compatible_field_name(f):
             """Add ` ` to prevent conflicts with MySQL reserved words"""
             if _Engine.is_sqlite():
-                return '`%s`' % field
-            return '`%s`.`%s`' % (cls.__table__, field)
+                return '`%s`' % f
+            return '`%s`.`%s`' % (cls.__table__, f)
 
         if isinstance(field, str):
             fields = cls.get_fields()
@@ -524,6 +513,47 @@ class Model(dict, metaclass=ModelMetaClass):
         return cls
 
     @classonlymethod
+    def _add_where(cls, sql: StringBuff, args: List) -> NoReturn:
+        """
+        Add where condition.
+        Args:
+            sql: the sql buff now use
+            args: the args list now use
+        """
+        if cls._exclude:
+            excludes = 'NOT(%s)' % ' OR '.join(cls._exclude)
+            cls._where.append(excludes)
+        args += cls._where_args
+        args += cls._exclude_args
+        if cls._where:
+            if cls._or_connect:
+                sql += ' WHERE %s' % ' OR '.join(cls._where)
+            else:
+                sql += ' WHERE %s' % ' AND '.join(cls._where)
+
+    @classonlymethod
+    def _get_select_statement(cls) -> Tuple[StringBuff, List]:
+        """
+        Add condition for SELECT query.
+        Returns: sql and args.
+        """
+        sql = StringBuff('SELECT ')
+        args = []
+        if cls._distinct:
+            sql += ' DISTINCT '
+        sql += ','.join(cls._query_fields)
+        sql += ' FROM %s ' % cls._get_compatible_table_name()
+        cls._add_where(sql, args)
+        if cls._order_by:
+            sql += ' ORDER BY '
+            sql += '%s' % ','.join(cls._order_by)
+        if cls._limit:
+            sql += ' LIMIT ? OFFSET ?'
+            args.append(cls._limit)
+            args.append(cls._limit_offset)
+        return sql, args
+
+    @classonlymethod
     async def find(cls, conn=None):
         """
         Do select.This method will return a list of YourModel objects.
@@ -534,34 +564,13 @@ class Model(dict, metaclass=ModelMetaClass):
         Return:
             (list) A list of YourModel objects.If no record can be found, will return an empty list.
         """
-        sql = 'SELECT '
-        args = []
-        if cls._distinct:
-            sql += ' DISTINCT '
-        sql += ','.join(cls._query_fields) + ' FROM ' + cls._get_compatible_table_name()
-        if cls._exclude:
-            excludes = 'NOT( ' + ' OR '.join(cls._exclude) + ' )'
-            cls._where.append(excludes)
-        args += cls._where_args
-        args += cls._exclude_args
-        if cls._where:
-            if cls._or_connect:
-                sql = sql + ' WHERE ' + ' OR '.join(cls._where)
-            else:
-                sql = sql + ' WHERE ' + ' AND '.join(cls._where)
-        if cls._order_by:
-            sql += ' ORDER BY '
-            sql += ' ' + ','.join(cls._order_by) + ' '
-        if cls._limit:
-            sql = sql + ' LIMIT ? OFFSET ?'
-            args.append(cls._limit)
-            args.append(cls._limit_offset)
+        sql, args = cls._get_select_statement()
         if conn:
             _conn = conn
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=_conn)
+        rs = await select(str(sql), args, conn=_conn)
         return [cls(_new_created=False, **r) for r in rs]
 
     @classonlymethod
@@ -575,32 +584,15 @@ class Model(dict, metaclass=ModelMetaClass):
         Returns:
             (Model) One YourModel object.If no record can be found, will return None.
         """
-        sql = 'SELECT '
-        args = []
-        if cls._distinct:
-            sql += ' DISTINCT '
-        sql += ','.join(cls._query_fields) + ' FROM ' + cls._get_compatible_table_name()
-        if cls._exclude:
-            excludes = 'NOT( ' + ' OR '.join(cls._exclude) + ' )'
-            cls._where.append(excludes)
-        args += cls._where_args
-        args += cls._exclude_args
-        if cls._where:
-            if cls._or_connect:
-                sql = sql + ' WHERE ' + ' OR '.join(cls._where)
-            else:
-                sql = sql + ' WHERE ' + ' AND '.join(cls._where)
-        if cls._order_by:
-            sql += ' ORDER BY '
-            sql += ' ' + ','.join(cls._order_by) + ' '
-        sql = sql + ' LIMIT ? '
-        args.append(1)
+        cls._limit = 1
+        cls._limit_offset = 0
+        sql, args = cls._get_select_statement()
         if conn:
             _conn = conn
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=_conn)
+        rs = await select(str(sql), args, conn=_conn)
         if rs:
             return cls(_new_created=False, **rs[0])
         else:
@@ -623,17 +615,16 @@ class Model(dict, metaclass=ModelMetaClass):
             (Model) One YourModel object.If no record can be found, will return None.
         """
 
-        sql = 'SELECT '
-        sql += ','.join(cls._query_fields) + ' FROM ' + cls._get_compatible_table_name()
-        sql += " WHERE " + cls._get_compatible_field_name(cls.get_primary_key()) + " =?"
+        sql = StringBuff('SELECT ')
+        sql += '%s FROM %s' % (','.join(cls._query_fields), cls._get_compatible_table_name())
+        sql += " WHERE %s =?" % cls._get_compatible_field_name(cls.get_primary_key())
         args = [pk_value]
         if conn:
             _conn = conn
         else:
             _conn = cls._conn
-        conn = cls._conn
         cls._clear()
-        rs = await select(sql, args, conn=_conn)
+        rs = await select(str(sql), args, conn=_conn)
         if rs:
             return cls(_new_created=False, **rs[0])
         else:
@@ -680,11 +671,12 @@ class Model(dict, metaclass=ModelMetaClass):
         """
         if group_by:
             group_field = cls._get_compatible_field_name(group_by)
-            sql = 'SELECT %s,' % group_field
+            sql = StringBuff('SELECT %s,' % group_field)
         else:
-            sql = 'SELECT '
+            sql = StringBuff('SELECT ')
+
+        # Add aggregate fields and aliases
         query_field = []
-        sqlargs = []
         for agg_pair in args:
             if agg_pair[1] == '*':
                 agg_field = '*'
@@ -697,18 +689,11 @@ class Model(dict, metaclass=ModelMetaClass):
             else:
                 agg_field = cls._get_compatible_field_name(agg_pair[1])
             query_field.append(agg_pair[0] % agg_field + ' AS ' + alias)
+
+        sql_args = []
         sql += ','.join(query_field)
         sql += ' FROM ' + cls._get_compatible_table_name()
-        if cls._exclude:
-            excludes = 'NOT( ' + ' OR '.join(cls._exclude) + ' )'
-            cls._where.append(excludes)
-        sqlargs += cls._where_args
-        sqlargs += cls._exclude_args
-        if cls._where:
-            if cls._or_connect:
-                sql = sql + ' WHERE ' + ' OR '.join(cls._where)
-            else:
-                sql = sql + ' WHERE ' + ' AND '.join(cls._where)
+        cls._add_where(sql, sql_args)
         if group_by:
             sql += ' GROUP BY %s' % group_field
         if conn:
@@ -716,7 +701,7 @@ class Model(dict, metaclass=ModelMetaClass):
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await select(sql, sqlargs, conn=_conn)
+        rs = await select(str(sql), sql_args, conn=_conn)
         if rs:
             if group_by:
                 r_dict = {}
@@ -787,11 +772,12 @@ class Model(dict, metaclass=ModelMetaClass):
         This method can insert multiple objects and access the database only once.
 
         Args:
-            insert_objects (Model): One or more object of this Model.
+            insert_objects (Model): One or more object of this Model.They must have the same format.
             conn: custom connection (this parameter is optional)
 
         Raise:
             ValueError: An error occurred when argument is not the object of this model.
+            RuntimeError: An error occurred when arguments do not have the same format.
 
         Return:
             (int) Affected rows.
@@ -801,13 +787,15 @@ class Model(dict, metaclass=ModelMetaClass):
         _object = insert_objects[0]
         if not isinstance(_object, cls):
             raise ValueError('argument of %s.insert() must be object of %s' % (cls.__name__, cls.__name__))
-        # Determine the fields to insert
+        # Determine the fields to insert by the first object
         for f in _object.get_fields():
             value = _object._get_value_or_default(f)
             if not isinstance(value, _TableDefault):
                 insert_field.append(f)
             multiple_args.append(value)
         object_num = 1
+
+        # Add data for remaining objects
         for _object in insert_objects[1:]:
             if not isinstance(_object, cls):
                 raise ValueError('argument of %s.insert() must be object of %s' % (cls.__name__, cls.__name__))
@@ -816,6 +804,7 @@ class Model(dict, metaclass=ModelMetaClass):
                     raise RuntimeError('arguments must have same format.')
                 multiple_args.append(_object._get_value_or_default(f))
             object_num += 1
+
         insert_field = [cls._get_compatible_field_name(f) for f in cls.get_fields()]
         sql = 'INSERT INTO ' + cls._get_compatible_table_name() + \
               ' (%s) VALUES %s' % (','.join(insert_field),
@@ -825,7 +814,7 @@ class Model(dict, metaclass=ModelMetaClass):
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, multiple_args, conn=_conn)
+        rs = await execute(str(sql), multiple_args, conn=_conn)
         return rs
 
     @classonlymethod
@@ -845,25 +834,15 @@ class Model(dict, metaclass=ModelMetaClass):
         change_field = []
         args = []
         for field_name, new_value in kwargs.items():
-            change_field.append(cls._get_compatible_field_name(field_name) + '=?')
+            change_field.append('%s=?' % cls._get_compatible_field_name(field_name))
             args.append(new_value)
-        sql = 'UPDATE ' + cls._get_compatible_table_name() + ' SET ' + ','.join(change_field)
-        if cls._exclude:
-            excludes = 'NOT( ' + ' OR '.join(cls._exclude) + ' )'
-            cls._where.append(excludes)
-        args += cls._where_args
-        args += cls._exclude_args
-        if cls._where:
-            if cls._or_connect:
-                sql = sql + ' WHERE ' + ' OR '.join(cls._where)
-            else:
-                sql = sql + ' WHERE ' + ' AND '.join(cls._where)
+        sql = StringBuff('UPDATE %s SET %s' % (cls._get_compatible_table_name(), ','.join(change_field)))
         if conn:
             _conn = conn
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, args, conn=_conn)
+        rs = await execute(str(sql), args, conn=_conn)
         return rs
 
     @classonlymethod
@@ -879,29 +858,21 @@ class Model(dict, metaclass=ModelMetaClass):
         Return:
             (int) Total number of objects deleted.
         """
-        sql = 'DELETE FROM ' + cls._get_compatible_table_name()
+        sql = StringBuff('DELETE FROM %s' % cls._get_compatible_table_name())
         args = []
-        if cls._exclude:
-            excludes = 'NOT( ' + ' OR '.join(cls._exclude) + ' )'
-            cls._where.append(excludes)
-        args += cls._where_args
-        args += cls._exclude_args
-        if cls._where:
-            if cls._or_connect:
-                sql = sql + ' WHERE ' + ' OR '.join(cls._where)
-            else:
-                sql = sql + ' WHERE ' + ' AND '.join(cls._where)
+        cls._add_where(sql, args)
         if conn:
             _conn = conn
         else:
             _conn = cls._conn
         cls._clear()
-        rs = await execute(sql, args, conn=_conn)
+        rs = await execute(str(sql), args, conn=_conn)
         return rs
 
     @classonlymethod
     async def create_table(cls):
         """Create this table in current database."""
+
         # Check whether the table exists
         if _Engine.is_mysql():
             r = await select("""
@@ -918,6 +889,7 @@ class Model(dict, metaclass=ModelMetaClass):
             to_create = input(
                 """Warning: table %s already exists in database %s!!!\n""" % (cls.__table__, cls._current_db) +
                 """do you want to delete it and recreate it?[Y/N]""") in ['y', 'Y']
+
         if to_create:
             print('to create table %s.' % cls.__table__)
             if _Engine.is_sqlite():
@@ -934,9 +906,9 @@ class Model(dict, metaclass=ModelMetaClass):
                     columns.append(' '.join(column_sql))  # one column sql
                     column_sql.clear()
                 await execute("DROP TABLE IF EXISTS %s" % cls._get_compatible_table_name())
-                sql = 'CREATE TABLE %s' % cls._get_compatible_table_name()
-                sql += '(%s)' % ',\n'.join(columns)
-                await execute(sql, args)
+                sql = 'CREATE TABLE %s (%s)' % (cls._get_compatible_table_name(), ',\n'.join(columns))
+                # sql += '(%s)' % ',\n'.join(columns)
+                await execute(str(sql), args)
             else:  # to mysql
                 columns = []
                 args = []
@@ -951,12 +923,11 @@ class Model(dict, metaclass=ModelMetaClass):
                     args.append(f_field.comment)
                     columns.append(' '.join(column_sql))  # one column sql
                     column_sql.clear()
-                sql = 'CREATE DATABASE IF NOT EXISTS `%s`;' % cls._current_db
+                sql = StringBuff('CREATE DATABASE IF NOT EXISTS `%s`;\n' % cls._current_db)
                 sql += 'DROP TABLE IF EXISTS %s;\n' % cls._get_compatible_table_name()
-                sql += 'CREATE TABLE %s' % cls._get_compatible_table_name()
-                sql += '(%s,\nPRIMARY KEY (`%s`));\n' % (',\n'.join(columns),
-                                                         cls.get_primary_key())
-                await execute(sql, args)
+                sql += 'CREATE TABLE %s\n' % cls._get_compatible_table_name()
+                sql += '(%s,\nPRIMARY KEY (`%s`));\n' % (',\n'.join(columns), cls.get_primary_key())
+                await execute(str(sql), args)
             logger.info('create table %s' % cls.__table__)
             cls._clear()
         else:
@@ -980,35 +951,39 @@ class Model(dict, metaclass=ModelMetaClass):
         if self._new_created:  # a new object to insert
             insert_field = []
             args = []
+            # get insert filed and it's value
             for f in self.get_fields():
                 value = self._get_value_or_default(f)
                 if not isinstance(value, _TableDefault):
                     insert_field.append(self._get_compatible_field_name(f))
                     args.append(value)
-            sql = 'INSERT INTO ' + self._get_compatible_table_name() + \
-                  ' (%s) VALUES (%s)' % (','.join(insert_field), ','.join(['?'] * len(insert_field)))
+            sql = 'INSERT INTO  %s (%s) VALUES (%s)' % (self._get_compatible_table_name(),
+                                                        ','.join(insert_field), ','.join(['?'] * len(insert_field)))
         else:  # a changed object to update
             update_field = []
             args = []
+            # get primary key
             pk = self.get_primary_key()
             pk_value = getattr(self, pk, None)
             if pk_value and pk_value != self._pk_value:
                 raise AttributeError('save failed: primary key has already changed.')
+            # get remain field and it's value
             for f in self._fields_without_pk:
                 value = self._get_value(f)
                 if value:
                     update_field.append(f)
                     args.append(value)
-            sql = 'UPDATE ' + self._get_compatible_table_name() + ' SET ' + \
-                  ','.join([self._get_compatible_field_name(_) + '=?' for _ in update_field]) + \
-                  ' WHERE ' + self._get_compatible_field_name(pk) + '=?'
+            sql = 'UPDATE %s SET %s WHERE %s=?' %(self._get_compatible_table_name(),
+                                                  ','.join(['%s=?' % self._get_compatible_field_name(_)\
+                                                            for _ in update_field]),
+                                                  self._get_compatible_field_name(pk))
             args.append(self._pk_value)
         if conn:
             _conn = conn
         else:
             _conn = self._conn
         self._conn = None
-        rs = await execute(sql, args, conn=_conn)
+        rs = await execute(str(sql), args, conn=_conn)
         if rs != 1:
             raise RuntimeError('Failed to save object %s' % self)
 
@@ -1035,15 +1010,14 @@ class Model(dict, metaclass=ModelMetaClass):
         pk_value = self._get_value(pk)
         if not pk_value:
             raise RuntimeError('Can not find a primary key, this may be due to a wrong call of this method.')
-        sql = 'DELETE FROM ' + self._get_compatible_table_name() + \
-              ' WHERE %s=? ' % (self._get_compatible_field_name(pk))
+        sql = 'DELETE FROM %s WHERE %s=? ' % (self._get_compatible_table_name(), self._get_compatible_field_name(pk))
         args = [pk_value]
         if conn:
             _conn = conn
         else:
             _conn = self._conn
         self._conn = None
-        rs = await execute(sql, args, conn=_conn)
+        rs = await execute(str(sql), args, conn=_conn)
         if rs == 0:
             logger.warning('object %s is not in the database' % self)
 
