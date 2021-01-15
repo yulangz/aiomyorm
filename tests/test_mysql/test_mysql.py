@@ -381,6 +381,18 @@ class WriteTest(aiounittest.AsyncTestCase):
         self.assertEqual(r[0]['age'], 18)
         await execute("delete from test where pk=9999")
 
+    async def test_save_changed_object_with_value_0(self):
+        await execute("delete from test where pk=9999")
+        await execute(
+            "INSERT INTO `test`.`test` (`pk`, `id`, `age`, `birth_place`, `grade`) VALUES (9999, '123', 20, 'no', 1)")
+        obj = await Test.pk_find(9999)
+        self.assertEqual(obj.age, 20)
+        obj.age = 0
+        await obj.save()
+        r = await select("select * from test where pk=9999")
+        self.assertEqual(r[0]['age'], 0)
+        await execute("delete from test where pk=9999")
+
     async def test_auto_increment(self):
         await execute("delete from test where id='6666'")
         async with Transaction() as conn:

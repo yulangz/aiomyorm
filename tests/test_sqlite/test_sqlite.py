@@ -101,7 +101,7 @@ class ReadTest(aiounittest.AsyncTestCase):
                                             ( 8,'00007', 20, 'someplace3', 2 ),
                                             ( 9,'00008', 21, 'someplace3', 1 ),
                                             ( 10,'00009', 17, 'someplace3', 2 ),
-                                            ( 11,'00010', 22, 'someplace', 1 )""")
+                                            ( 0,'00010', 22, 'someplace', 1 )""")
 
         loop = cls.my_loop
         loop.run_until_complete(set_up_run())
@@ -184,8 +184,8 @@ class ReadTest(aiounittest.AsyncTestCase):
         self.assertDictEqual(rs[0], rso)
 
     async def test_pk_find(self):
-        rs = await select('select * from test where pk=1')
-        rso = await Test.pk_find(1)
+        rs = await select('select * from test where pk=0')
+        rso = await Test.pk_find(0)
         self.assertDictEqual(rs[0], rso)
 
     async def test_aggregate(self):
@@ -261,7 +261,7 @@ class WriteTest(aiounittest.AsyncTestCase):
                                             ( 8,'00007', 20, 'someplace3', 2 ),
                                             ( 9,'00008', 21, 'someplace3', 1 ),
                                             ( 10,'00009', 17, 'someplace3', 2 ),
-                                            ( 11,'00010', 22, 'someplace', 1 )""")
+                                            ( 0,'00010', 22, 'someplace', 1 )""")
 
         loop = cls.my_loop
         loop.run_until_complete(set_up_run())
@@ -299,6 +299,18 @@ class WriteTest(aiounittest.AsyncTestCase):
         await obj.save()
         r = await select("select * from test where pk=9999")
         self.assertEqual(r[0]['age'], 18)
+        await execute("delete from test where pk=9999")
+
+    async def test_save_changed_object_with_value_0(self):
+        await execute("delete from test where pk=9999")
+        await execute(
+            "INSERT INTO `test` (`pk`, `id`, `age`, `birth_place`, `grade`) VALUES (9999, '123', 20, 'no', 1)")
+        obj = await Test.pk_find(9999)
+        self.assertEqual(obj.age, 20)
+        obj.age = 0
+        await obj.save()
+        r = await select("select * from test where pk=9999")
+        self.assertEqual(r[0]['age'], 0)
         await execute("delete from test where pk=9999")
 
     async def test_auto_increment(self):

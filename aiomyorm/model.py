@@ -965,12 +965,12 @@ class Model(dict, metaclass=ModelMetaClass):
             # get primary key
             pk = self.get_primary_key()
             pk_value = getattr(self, pk, None)
-            if pk_value and pk_value != self._pk_value:
+            if pk_value is not None and pk_value != self._pk_value:
                 raise AttributeError('save failed: primary key has already changed.')
             # get remain field and it's value
             for f in self._fields_without_pk:
                 value = self._get_value(f)
-                if value:
+                if value is not None:
                     update_field.append(f)
                     args.append(value)
             sql = 'UPDATE %s SET %s WHERE %s=?' %(self._get_compatible_table_name(),
@@ -1023,7 +1023,7 @@ class Model(dict, metaclass=ModelMetaClass):
 
 
 def Max(field: Field = None):
-    if not field:
+    if field is None:
         return 'MAX(%s)', '*'
     elif isinstance(field, str):
         return 'MAX(%s)', field
@@ -1032,7 +1032,7 @@ def Max(field: Field = None):
 
 
 def Min(field: Field = None):
-    if not field:
+    if field is None:
         return 'MIN(%s)', '*'
     elif isinstance(field, str):
         return 'MIN(%s)', field
@@ -1041,7 +1041,7 @@ def Min(field: Field = None):
 
 
 def Avg(field: Field = None):
-    if not field:
+    if field is None:
         return 'AVG(%s)', '*'
     elif isinstance(field, str):
         return 'AVG(%s)', field
@@ -1050,7 +1050,7 @@ def Avg(field: Field = None):
 
 
 def Sum(field: Field = None):
-    if not field:
+    if field is None:
         return 'SUM(%s)', '*'
     elif isinstance(field, str):
         return 'SUM(%s)', field
@@ -1059,7 +1059,7 @@ def Sum(field: Field = None):
 
 
 def Count(field=None):
-    if not field:
+    if field is None:
         return 'COUNT(%s)', '*'
     elif isinstance(field, str):
         return 'COUNT(%s)', field
