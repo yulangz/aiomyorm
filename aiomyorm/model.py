@@ -342,8 +342,8 @@ class Model(dict, metaclass=ModelMetaClass):
 
         e.g.::
 
-            r = await User.query(User.id).findall()
-            r = await User.query('id').findall()
+            r = await User.query(User.id).find()
+            r = await User.query('id').find()
         Raises:
             ValueError: An error occurred when argument is not a Field.
         """
