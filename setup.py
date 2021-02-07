@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aiomyorm",
-    version="0.2.1",
+    version="0.2.2",
     author="yulansp",
     author_email="1301481108@qq.com",
 

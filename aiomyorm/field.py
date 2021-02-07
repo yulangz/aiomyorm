@@ -69,22 +69,22 @@ class Field(object):
     __repr__ = __str__
 
     def __gt__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` > ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`>?', other
 
     def __ge__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` >= ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`>=?', other
 
     def __eq__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` = ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`=?', other
 
     def __le__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` <= ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`<=?', other
 
     def __lt__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` < ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`<?', other
 
     def __ne__(self, other):
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` != ?', other
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '`!=?', other
 
     def between(self, val1, val2):
         """Limit the value of this field between val1 and val2, Both sides of the border will be taken."""
@@ -96,15 +96,15 @@ class Field(object):
 
     def start_with(self, val):
         """Constrain a string field start whit the val."""
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', str(val) + '% '
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', str(val) + '%'
 
     def end_with(self, val):
         """Constrain a string field end whit the val."""
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', ' %' + str(val)
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', '%' + str(val)
 
     def has(self, val):
         """Constrain Val in a string field."""
-        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', ' %' + str(val) + '% '
+        return '`' + self.belong_model.__table__ + '`.`' + self._field_name + '` LIKE ?', '%' + str(val) + '%'
 
     def _is_table_default(self):
         return isinstance(self.default, _TableDefault)
@@ -117,7 +117,7 @@ _integer_field = ['tinyint', 'smallint', 'mediumint', 'int', 'bigint']
 class BoolField(Field):
     """A bool field."""
 
-    def __init__(self, primary_key=False, default=False, null=False, comment=''):
+    def __init__(self, primary_key=False, default=0, null=False, comment=''):
         super().__init__(column_type='tinyint', primary_key=primary_key, default=default,
                          null=null, comment=comment)
 

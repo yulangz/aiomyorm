@@ -35,7 +35,7 @@ from aiomyorm.log import logger
 from aiomyorm.set_config import set_config
 
 set_config(engine='sqlite',
-           db='test.db')
+           db='test.db',echo=True)
 
 
 class Set_All_Field(Model):
