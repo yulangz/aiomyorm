@@ -8,9 +8,11 @@
 *.pyo
 *.so
 *.tar.gz
-built
-aiomyorm.egg-info
+build
+aiomyorm.egg-info/
 dist
 docs/build
 .vs
 .idea
+*.db
+**/__pycache__
