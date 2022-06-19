@@ -13,3 +13,4 @@ aiomyorm.egg-info
 dist
 docs/build
 .vs
+.idea
